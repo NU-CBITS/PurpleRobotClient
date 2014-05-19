@@ -35,9 +35,9 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PurpleRobot</span><span class="hljs-params">(options)</span> {</span>
   options = options || {};
 
-  <span class="hljs-keyword">var</span> config = {
-    serverUrl: options.serverUrl || <span class="hljs-string">"http://localhost:12345/json/submit"</span>
-  };</pre></div></div>
+  <span class="hljs-keyword">this</span>._serverUrl = options.serverUrl || <span class="hljs-string">"http://localhost:12345/json/submit"</span>;
+  <span class="hljs-keyword">this</span>._script = options.script || <span class="hljs-string">""</span>;
+}</pre></div></div>
             
         </li>
         
@@ -52,10 +52,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">this</span>.apiVersion = <span class="hljs-string">"1.5.2"</span>;
-
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ApiMethod</span><span class="hljs-params">(script)</span> {</span>
-    script = script || <span class="hljs-string">""</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>PurpleRobot.apiVersion = <span class="hljs-string">"1.5.2"</span>;</pre></div></div>
             
         </li>
         
@@ -70,9 +67,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">apiMethod</span><span class="hljs-params">(nextScript)</span> {</span>
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ApiMethod([script, <span class="hljs-string">"PurpleRobot."</span> + nextScript + <span class="hljs-string">";"</span>].join(<span class="hljs-string">" "</span>).trim());
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype._apiMethod = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(nextScript)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> PurpleRobot({
+    serverUrl: <span class="hljs-keyword">this</span>._serverUrl,
+    script: [<span class="hljs-keyword">this</span>._script, <span class="hljs-string">"PurpleRobot."</span> + nextScript + <span class="hljs-string">";"</span>].join(<span class="hljs-string">" "</span>).trim()
+  });
+}</pre></div></div>
             
         </li>
         
@@ -87,9 +87,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.toString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">return</span> script;
-    };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.toString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._script;
+};</pre></div></div>
             
         </li>
         
@@ -105,19 +105,19 @@ making an HTTP request to the Purple Robot HTTP server.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.execute = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">var</span> httpRequest = <span class="hljs-keyword">new</span> XMLHttpRequest();
-      httpRequest.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-      };
-      <span class="hljs-keyword">var</span> isAsynchronous = <span class="hljs-literal">true</span>;
-      httpRequest.open(<span class="hljs-string">"POST"</span>, config.serverUrl, isAsynchronous);
-      httpRequest.setRequestHeader(<span class="hljs-string">'Content-Type'</span>, <span class="hljs-string">'application/x-www-form-urlencoded'</span>);
-      <span class="hljs-keyword">var</span> json = <span class="hljs-built_in">JSON</span>.stringify({
-        command: <span class="hljs-string">"execute_script"</span>,
-        script: <span class="hljs-keyword">this</span>.toString()
-      });
-      httpRequest.send(<span class="hljs-string">"json="</span> + json);
-    };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.execute = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">var</span> httpRequest = <span class="hljs-keyword">new</span> XMLHttpRequest();
+  httpRequest.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+  };
+  <span class="hljs-keyword">var</span> isAsynchronous = <span class="hljs-literal">true</span>;
+  httpRequest.open(<span class="hljs-string">"POST"</span>, <span class="hljs-keyword">this</span>._serverUrl, isAsynchronous);
+  httpRequest.setRequestHeader(<span class="hljs-string">'Content-Type'</span>, <span class="hljs-string">'application/x-www-form-urlencoded'</span>);
+  <span class="hljs-keyword">var</span> json = <span class="hljs-built_in">JSON</span>.stringify({
+    command: <span class="hljs-string">"execute_script"</span>,
+    script: <span class="hljs-keyword">this</span>.toString()
+  });
+  httpRequest.send(<span class="hljs-string">"json="</span> + json);
+};</pre></div></div>
             
         </li>
         
@@ -145,13 +145,13 @@ making an HTTP request to the Purple Robot HTTP server.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.broadcastIntent = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(action, options)</span> {</span>
-      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"/* broadcastIntent NOT IMPLEMENTED YET */"</span>);
-    };
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.broadcastIntent = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(action, options)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"/* broadcastIntent NOT IMPLEMENTED YET */"</span>);
+};
 
-    <span class="hljs-keyword">this</span>.dateFromTimestamp = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(epoch)</span> {</span>
-      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"/* dateFromTimestamp NOT IMPLEMENTED YET */"</span>);
-    };</pre></div></div>
+PurpleRobot.prototype.dateFromTimestamp = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(epoch)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"/* dateFromTimestamp NOT IMPLEMENTED YET */"</span>);
+};</pre></div></div>
             
         </li>
         
@@ -170,9 +170,9 @@ extrapolated from the <em>value</em>.</p>
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.emitReading = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, value)</span> {</span>
-      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"emitReading('"</span> + name + <span class="hljs-string">"', '"</span> + <span class="hljs-built_in">JSON</span>.stringify(value) + <span class="hljs-string">"')"</span>);
-    };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.emitReading = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, value)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"emitReading('"</span> + name + <span class="hljs-string">"', '"</span> + <span class="hljs-built_in">JSON</span>.stringify(value) + <span class="hljs-string">"')"</span>);
+};</pre></div></div>
             
         </li>
         
@@ -189,13 +189,13 @@ extrapolated from the <em>value</em>.</p>
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.emitToast = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message, hasLongDuration)</span> {</span>
-      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"emitToast('"</span> + message + <span class="hljs-string">"', "</span> + hasLongDuration + <span class="hljs-string">")"</span>);
-    };
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.emitToast = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message, hasLongDuration)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"emitToast('"</span> + message + <span class="hljs-string">"', "</span> + hasLongDuration + <span class="hljs-string">")"</span>);
+};
 
-    <span class="hljs-keyword">this</span>.fetchConfig = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"fetchConfig()"</span>);
-    };</pre></div></div>
+PurpleRobot.prototype.fetchConfig = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"fetchConfig()"</span>);
+};</pre></div></div>
             
         </li>
         
@@ -213,33 +213,33 @@ paired with <code>persistEncryptedString</code>.</p>
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.fetchEncryptedString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(namespace, key)</span> {</span>
-      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"fetchEncryptedString('"</span> + namespace + <span class="hljs-string">"', '"</span> + key + <span class="hljs-string">"')"</span>);
-    };
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.fetchEncryptedString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(namespace, key)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"fetchEncryptedString('"</span> + namespace + <span class="hljs-string">"', '"</span> + key + <span class="hljs-string">"')"</span>);
+};
 
-    <span class="hljs-keyword">this</span>.fetchNamespace = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(namespace)</span> {</span>
-    };
+PurpleRobot.prototype.fetchNamespace = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(namespace)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.fetchNamespaces = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    };
+PurpleRobot.prototype.fetchNamespaces = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.fetchSnapshot = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(timestamp)</span> {</span>
-    };
+PurpleRobot.prototype.fetchSnapshot = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(timestamp)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.fetchSnapshotIds = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    };
+PurpleRobot.prototype.fetchSnapshotIds = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.fetchTrigger = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id)</span> {</span>
-    };
+PurpleRobot.prototype.fetchTrigger = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.fetchTriggerIds = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    };
+PurpleRobot.prototype.fetchTriggerIds = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.fetchWidget = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id)</span> {</span>
-    };
+PurpleRobot.prototype.fetchWidget = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.formatDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(date)</span> {</span>
-    };</pre></div></div>
+PurpleRobot.prototype.formatDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(date)</span> {</span>
+};</pre></div></div>
             
         </li>
         
@@ -257,33 +257,33 @@ the icon.</p>
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.launchApplication = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> {</span>
-      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"launchApplication('"</span> + name + <span class="hljs-string">"')"</span>);
-    };
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.launchApplication = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"launchApplication('"</span> + name + <span class="hljs-string">"')"</span>);
+};
 
-    <span class="hljs-keyword">this</span>.launchInternalUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
-    };
+PurpleRobot.prototype.launchInternalUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.launchUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
-    };
+PurpleRobot.prototype.launchUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.loadLibrary = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> {</span>
-    };
+PurpleRobot.prototype.loadLibrary = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.log = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, value)</span> {</span>
-    };
+PurpleRobot.prototype.log = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, value)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.models = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    };
+PurpleRobot.prototype.models = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.now = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    };
+PurpleRobot.prototype.now = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.packageForApplicationName = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(applicationName)</span> {</span>
-    };
+PurpleRobot.prototype.packageForApplicationName = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(applicationName)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.parseDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(dateString)</span> {</span>
-    };</pre></div></div>
+PurpleRobot.prototype.parseDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(dateString)</span> {</span>
+};</pre></div></div>
             
         </li>
         
@@ -300,27 +300,27 @@ the icon.</p>
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.persistEncryptedString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(namespace, key, value)</span> {</span>
-    };
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.persistEncryptedString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(namespace, key, value)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.playDefaultTone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"playDefaultTone()"</span>);
-    };
+PurpleRobot.prototype.playDefaultTone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"playDefaultTone()"</span>);
+};
 
-    <span class="hljs-keyword">this</span>.playTone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(tone)</span> {</span>
-    };
+PurpleRobot.prototype.playTone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(tone)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.predictions = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    };
+PurpleRobot.prototype.predictions = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.readings = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    };
+PurpleRobot.prototype.readings = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.readUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
-    };
+PurpleRobot.prototype.readUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
+};
 
-    <span class="hljs-keyword">this</span>.runScript = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(script)</span> {</span>
-    };</pre></div></div>
+PurpleRobot.prototype.runScript = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(script)</span> {</span>
+};</pre></div></div>
             
         </li>
         
@@ -338,40 +338,12 @@ the icon.</p>
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.scheduleScript = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, minutes, method)</span> {</span>
-      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"scheduleScript('"</span> + name + <span class="hljs-string">"', '"</span> + units + <span class="hljs-string">"', "</span> + <span class="hljs-built_in">JSON</span>.stringify(method.toString()) + <span class="hljs-string">")"</span>);
-    };
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.scheduleScript = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, minutes, method)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"scheduleScript('"</span> + name + <span class="hljs-string">"', '"</span> + units + <span class="hljs-string">"', "</span> + <span class="hljs-built_in">JSON</span>.stringify(method.toString()) + <span class="hljs-string">")"</span>);
+};
 
-    <span class="hljs-keyword">this</span>.showApplicationLaunchNotification = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(title, message, applicationName, displayWhen, isPersistent, launchParameters, script)</span> {</span>
-    };
-
-    <span class="hljs-keyword">this</span>.showNativeDialog = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, text, confirm, cancel, confirmScript, cancelScript)</span> {</span>
-    };
-
-    <span class="hljs-keyword">this</span>.updateConfig = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
-    };
-
-    <span class="hljs-keyword">this</span>.updateTrigger = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(triggerId, parameters)</span> {</span>
-    };
-
-    <span class="hljs-keyword">this</span>.updateWidget = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(parameters)</span> {</span>
-    };
-
-    <span class="hljs-keyword">this</span>.version = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    };
-
-    <span class="hljs-keyword">this</span>.vibrate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(pattern)</span> {</span>
-    };
-
-    <span class="hljs-keyword">this</span>.widgets = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    };
-  }
-
-  <span class="hljs-keyword">var</span> base = <span class="hljs-keyword">new</span> ApiMethod();
-  <span class="hljs-keyword">this</span>.emitReading = base.emitReading;
-  <span class="hljs-keyword">this</span>.emitToast = base.emitToast;
-  <span class="hljs-keyword">this</span>.playDefaultTone = base.playDefaultTone;
-  <span class="hljs-keyword">this</span>.scheduleScript = base.scheduleScript;</pre></div></div>
+PurpleRobot.prototype.showApplicationLaunchNotification = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(title, message, applicationName, displayWhen, isPersistent, launchParameters, script)</span> {</span>
+};</pre></div></div>
             
         </li>
         
@@ -382,6 +354,54 @@ the icon.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
+              <p>Opens an Android dialog with two buttons, <em>A</em> and <em>B</em>, and associates
+scripts to be run when each is pressed.</p>
+<p>Example</p>
+<pre><code>pr.showNativeDialog({
+  title: <span class="hljs-string">"My Dialog"</span>,
+  message: <span class="hljs-string">"What say you?"</span>,
+  buttonLabelA: <span class="hljs-string">"cheers"</span>,
+  scriptA: pr.emitToast(<span class="hljs-string">"cheers!"</span>),
+  buttonLabelB: <span class="hljs-string">"boo"</span>,
+  scriptB: pr.emitToast(<span class="hljs-string">"boo!"</span>)
+});
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.showNativeDialog = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"showNativeDialog('"</span> + options.title + <span class="hljs-string">"', '"</span> +
+    options.message + <span class="hljs-string">"', '"</span> + options.buttonLabelA + <span class="hljs-string">"', '"</span> +
+    options.buttonLabelB + <span class="hljs-string">"', "</span> + <span class="hljs-built_in">JSON</span>.stringify(options.scriptA) + <span class="hljs-string">", "</span> +
+    <span class="hljs-built_in">JSON</span>.stringify(options.scriptB) + <span class="hljs-string">")"</span>);
+};
+
+PurpleRobot.prototype.updateConfig = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
+};
+
+PurpleRobot.prototype.updateTrigger = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(triggerId, parameters)</span> {</span>
+};
+
+PurpleRobot.prototype.updateWidget = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(parameters)</span> {</span>
+};
+
+PurpleRobot.prototype.version = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};
+
+PurpleRobot.prototype.vibrate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(pattern)</span> {</span>
+};
+
+PurpleRobot.prototype.widgets = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
               <h2 id="further-examples">Further examples</h2>
 <p>Example of nesting</p>
 <pre><code><span class="hljs-keyword">var</span> playTone = pr.playDefaultTone();
@@ -389,13 +409,12 @@ the icon.</p>
 <span class="hljs-keyword">var</span> dialog1 = pr.showNativeDialog(
   <span class="hljs-string">"dialog 1"</span>, <span class="hljs-string">"are you happy?"</span>, <span class="hljs-string">"Yes"</span>, <span class="hljs-string">"No"</span>, playTone, toast
 );
-pr.scheduleScript(<span class="hljs-string">"dialog 1"</span>, <span class="hljs-number">10</span>, <span class="hljs-string">"minutes"</span>, dialog1).execute();
+pr.scheduleScript(<span class="hljs-string">"dialog 1"</span>, <span class="hljs-number">10</span>, <span class="hljs-string">"minutes"</span>, dialog1)
+  .execute();
 </code></pre><p>Example of chaining</p>
 <pre><code>pr.playDefaultTone().emitToast(<span class="hljs-string">"hey there"</span>).execute();
 </code></pre>
             </div>
-            
-            <div class="content"><div class='highlight'><pre>}</pre></div></div>
             
         </li>
         
