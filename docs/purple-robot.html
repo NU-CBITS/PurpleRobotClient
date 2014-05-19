@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>purple-robot.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>purple-robot.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Initialize the client with an options object made up of
+  serverUrl - the url to which commands are sent</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PurpleRobot</span><span class="hljs-params">(options)</span> {</span>
+  options = options || {};
+
+  <span class="hljs-keyword">var</span> config = {
+    serverUrl: options.serverUrl || <span class="hljs-string">"http://localhost:12345/json/submit"</span>
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>The version of the API, corresponding to the version of Purple Robot.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">this</span>.apiVersion = <span class="hljs-string">"1.5.2"</span>;
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ApiMethod</span><span class="hljs-params">(script)</span> {</span>
+    script = script || <span class="hljs-string">""</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Enables chaining of method calls.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">apiMethod</span><span class="hljs-params">(nextScript)</span> {</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ApiMethod([script, <span class="hljs-string">"PurpleRobot."</span> + nextScript + <span class="hljs-string">";"</span>].join(<span class="hljs-string">" "</span>).trim());
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Returns the string representation of the method call.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.toString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">return</span> script;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Executes the current method (and any previously chained methods) by
+making an HTTP request to the Purple Robot HTTP server.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.execute = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">var</span> httpRequest = <span class="hljs-keyword">new</span> XMLHttpRequest();
+      httpRequest.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+      };
+      <span class="hljs-keyword">var</span> isAsynchronous = <span class="hljs-literal">true</span>;
+      httpRequest.open(<span class="hljs-string">"POST"</span>, config.serverUrl, isAsynchronous);
+      httpRequest.setRequestHeader(<span class="hljs-string">'Content-Type'</span>, <span class="hljs-string">'application/x-www-form-urlencoded'</span>);
+      <span class="hljs-keyword">var</span> json = <span class="hljs-built_in">JSON</span>.stringify({
+        command: <span class="hljs-string">"execute_script"</span>,
+        script: <span class="hljs-keyword">this</span>.toString()
+      });
+      httpRequest.send(<span class="hljs-string">"json="</span> + json);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h2 id="purple-robot-api">Purple Robot API</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Broadcasts an Android intent.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.broadcastIntent = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(action, options)</span> {</span>
+      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"/* broadcastIntent NOT IMPLEMENTED YET */"</span>);
+    };
+
+    <span class="hljs-keyword">this</span>.dateFromTimestamp = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(epoch)</span> {</span>
+      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"/* dateFromTimestamp NOT IMPLEMENTED YET */"</span>);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Transmits a name value pair to be stored in Purple Robot Warehouse. The
+table name will be <em>name</em>, and the columns and data values will be
+extrapolated from the <em>value</em>.</p>
+<p>Example</p>
+<pre><code>pr.emitReading(<span class="hljs-string">"sandwich"</span>, <span class="hljs-string">"pb&amp;j"</span>).execute();
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.emitReading = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, value)</span> {</span>
+      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"emitReading('"</span> + name + <span class="hljs-string">"', '"</span> + <span class="hljs-built_in">JSON</span>.stringify(value) + <span class="hljs-string">"')"</span>);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Displays a native toast message on the phone.</p>
+<p>Example</p>
+<pre><code>pr.emitToast(<span class="hljs-string">"howdy"</span>, <span class="hljs-literal">true</span>);
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.emitToast = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message, hasLongDuration)</span> {</span>
+      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"emitToast('"</span> + message + <span class="hljs-string">"', "</span> + hasLongDuration + <span class="hljs-string">")"</span>);
+    };
+
+    <span class="hljs-keyword">this</span>.fetchConfig = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"fetchConfig()"</span>);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Returns a value stored for the namespace and key provided. Generally
+paired with <code>persistEncryptedString</code>.</p>
+<p>Example</p>
+<pre><code>pr.fetchEncryptedString(<span class="hljs-string">"my stuff"</span>, <span class="hljs-string">"x"</span>);
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.fetchEncryptedString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(namespace, key)</span> {</span>
+      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"fetchEncryptedString('"</span> + namespace + <span class="hljs-string">"', '"</span> + key + <span class="hljs-string">"')"</span>);
+    };
+
+    <span class="hljs-keyword">this</span>.fetchNamespace = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(namespace)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.fetchNamespaces = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.fetchSnapshot = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(timestamp)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.fetchSnapshotIds = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.fetchTrigger = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.fetchTriggerIds = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.fetchWidget = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(id)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.formatDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(date)</span> {</span>
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Launches the specified Android application as if the user had pressed
+the icon.</p>
+<p>Example</p>
+<pre><code>pr.launchApplication(<span class="hljs-string">"edu.northwestern.cbits.awesome_app"</span>);
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.launchApplication = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> {</span>
+      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"launchApplication('"</span> + name + <span class="hljs-string">"')"</span>);
+    };
+
+    <span class="hljs-keyword">this</span>.launchInternalUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.launchUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.loadLibrary = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.log = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, value)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.models = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.now = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.packageForApplicationName = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(applicationName)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.parseDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(dateString)</span> {</span>
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Stores the <em>value</em> within the <em>namespace</em>, identified by the <em>key</em>.</p>
+<p>Example</p>
+<pre><code>pr.persistEncryptedString(<span class="hljs-string">"app Q"</span>, <span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>);
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.persistEncryptedString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(namespace, key, value)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.playDefaultTone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"playDefaultTone()"</span>);
+    };
+
+    <span class="hljs-keyword">this</span>.playTone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(tone)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.predictions = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.readings = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.readUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.runScript = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(script)</span> {</span>
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Schedules a script to run a specified number of minutes in the future
+(calculated from when this script is evaluated).</p>
+<p>Example</p>
+<pre><code>pr.scheduleScript(<span class="hljs-string">"fancy script"</span>, <span class="hljs-number">5</span>, pr.playDefaultTone());
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.scheduleScript = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, minutes, method)</span> {</span>
+      <span class="hljs-keyword">return</span> apiMethod(<span class="hljs-string">"scheduleScript('"</span> + name + <span class="hljs-string">"', '"</span> + units + <span class="hljs-string">"', "</span> + <span class="hljs-built_in">JSON</span>.stringify(method.toString()) + <span class="hljs-string">")"</span>);
+    };
+
+    <span class="hljs-keyword">this</span>.showApplicationLaunchNotification = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(title, message, applicationName, displayWhen, isPersistent, launchParameters, script)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.showNativeDialog = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, text, confirm, cancel, confirmScript, cancelScript)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.updateConfig = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.updateTrigger = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(triggerId, parameters)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.updateWidget = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(parameters)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.version = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.vibrate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(pattern)</span> {</span>
+    };
+
+    <span class="hljs-keyword">this</span>.widgets = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    };
+  }
+
+  <span class="hljs-keyword">var</span> base = <span class="hljs-keyword">new</span> ApiMethod();
+  <span class="hljs-keyword">this</span>.emitReading = base.emitReading;
+  <span class="hljs-keyword">this</span>.emitToast = base.emitToast;
+  <span class="hljs-keyword">this</span>.playDefaultTone = base.playDefaultTone;
+  <span class="hljs-keyword">this</span>.scheduleScript = base.scheduleScript;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h2 id="further-examples">Further examples</h2>
+<p>Example of nesting</p>
+<pre><code><span class="hljs-keyword">var</span> playTone = pr.playDefaultTone();
+<span class="hljs-keyword">var</span> toast = pr.emitToast(<span class="hljs-string">"sorry"</span>);
+<span class="hljs-keyword">var</span> dialog1 = pr.showNativeDialog(
+  <span class="hljs-string">"dialog 1"</span>, <span class="hljs-string">"are you happy?"</span>, <span class="hljs-string">"Yes"</span>, <span class="hljs-string">"No"</span>, playTone, toast
+);
+pr.scheduleScript(<span class="hljs-string">"dialog 1"</span>, <span class="hljs-number">10</span>, <span class="hljs-string">"minutes"</span>, dialog1).execute();
+</code></pre><p>Example of chaining</p>
+<pre><code>pr.playDefaultTone().emitToast(<span class="hljs-string">"hey there"</span>).execute();
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
