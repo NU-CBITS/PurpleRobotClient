@@ -244,6 +244,26 @@ PurpleRobot.prototype.showNativeDialog = function(options) {
     ", " + options.scriptB.toJson() + ")");
 };
 
+// Adds a notification to the the tray and atttaches a script to be run when
+// it is pressed.
+//
+// Example
+//
+//     pr.showScriptNotification({
+//       title: "My app",
+//       message: "Press here",
+//       isPersistent: true,
+//       isSticky: false,
+//       script: pr.emitToast("You pressed it")
+//     });
+PurpleRobot.prototype.showScriptNotification = function(options) {
+  options = options || {};
+
+  return this._apiMethod("showScriptNotification('" + options.title + "', '" +
+    options.message + "', " + options.isPersistent + ", " + options.isSticky +
+    ", " + options.script.toJson() + ")");
+};
+
 PurpleRobot.prototype.updateConfig = function(options) {
 };
 

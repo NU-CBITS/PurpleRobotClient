@@ -98,6 +98,18 @@ describe("PurpleRobot", function() {
       expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\");");
     });
 
+    it("#showScriptNotification", function() {
+      var str = pr.showScriptNotification({
+        title: "My app",
+        message: "Press here",
+        isPersistent: true,
+        isSticky: false,
+        script: pr.emitToast("You pressed it")
+      }).toString();
+
+      expect(str).toEqual("PurpleRobot.showScriptNotification('My app', 'Press here', true, false, \"PurpleRobot.emitToast('You pressed it', true);\");");
+    });
+
     it("#updateTrigger", function() {
       var str = pr.updateTrigger({
         script: pr.emitToast("butter"),
