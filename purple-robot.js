@@ -51,6 +51,15 @@ PurpleRobot.prototype.broadcastIntent = function(action, options) {
   return this._apiMethod("/* broadcastIntent NOT IMPLEMENTED YET */");
 };
 
+// Removes the tray notification from the task bar.
+//
+// Example
+//
+//     pr.cancelScriptNotification();
+PurpleRobot.prototype.cancelScriptNotification = function() {
+  return this._apiMethod("cancelScriptNotification()");
+};
+
 PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
   return this._apiMethod("/* dateFromTimestamp NOT IMPLEMENTED YET */");
 };

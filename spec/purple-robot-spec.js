@@ -27,6 +27,11 @@ describe("PurpleRobot", function() {
   });
 
   describe("should implement API methods", function() {
+    it("#cancelScriptNotification", function() {
+      expect(pr.cancelScriptNotification().toString())
+        .toEqual("PurpleRobot.cancelScriptNotification();");
+    });
+
     it("#emitReading", function() {
       expect(pr.emitReading("a", "b").toString())
         .toEqual("PurpleRobot.emitReading('a', \"b\");");
