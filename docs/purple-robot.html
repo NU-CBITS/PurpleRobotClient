@@ -118,22 +118,41 @@
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Executes the current method (and any previously chained methods) by
-making an HTTP request to the Purple Robot HTTP server.</p>
-
+making an HTTP request to the Purple Robot HTTP server.
+Returns a simplistic promise.</p>
+<p>Example</p>
+<pre><code>pr.fetchEncryptedString(<span class="hljs-string">"foo"</span>).execute()
+  .done(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(payload)</span> {</span>
+    console.log(payload);
+  });
+</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.execute = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
   <span class="hljs-keyword">var</span> httpRequest = <span class="hljs-keyword">new</span> XMLHttpRequest();
-  httpRequest.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-  };
   <span class="hljs-keyword">var</span> isAsynchronous = <span class="hljs-literal">true</span>;
-  httpRequest.open(<span class="hljs-string">"POST"</span>, <span class="hljs-keyword">this</span>._serverUrl, isAsynchronous);
-  httpRequest.setRequestHeader(<span class="hljs-string">'Content-Type'</span>, <span class="hljs-string">'application/x-www-form-urlencoded'</span>);
   <span class="hljs-keyword">var</span> json = <span class="hljs-built_in">JSON</span>.stringify({
     command: <span class="hljs-string">"execute_script"</span>,
     script: <span class="hljs-keyword">this</span>.toString()
   });
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">promise</span><span class="hljs-params">(done)</span> {</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onDone</span><span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">if</span> (httpRequest.readyState === XMLHttpRequest.DONE) {
+        <span class="hljs-keyword">var</span> responseObj = httpRequest.response || {};
+        done(responseObj.payload);
+      }
+    }
+    httpRequest.onreadystatechange = onDone;
+
+    <span class="hljs-keyword">return</span> onDone;
+  }
+
+  httpRequest.open(<span class="hljs-string">"POST"</span>, <span class="hljs-keyword">this</span>._serverUrl, isAsynchronous);
+  httpRequest.setRequestHeader(<span class="hljs-string">"Content-Type"</span>, <span class="hljs-string">"application/x-www-form-urlencoded"</span>);
   httpRequest.send(<span class="hljs-string">"json="</span> + json);
+
+  <span class="hljs-keyword">return</span> { done: promise };
 };</pre></div></div>
             
         </li>

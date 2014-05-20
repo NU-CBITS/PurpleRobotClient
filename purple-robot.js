@@ -30,18 +30,39 @@ PurpleRobot.prototype.toJson = function() {
 
 // Executes the current method (and any previously chained methods) by
 // making an HTTP request to the Purple Robot HTTP server.
+// Returns a simplistic promise.
+//
+// Example
+//
+//     pr.fetchEncryptedString("foo").execute()
+//       .done(function(payload) {
+//         console.log(payload);
+//       });
 PurpleRobot.prototype.execute = function() {
   var httpRequest = new XMLHttpRequest();
-  httpRequest.onreadystatechange = function() {
-  };
   var isAsynchronous = true;
-  httpRequest.open("POST", this._serverUrl, isAsynchronous);
-  httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   var json = JSON.stringify({
     command: "execute_script",
     script: this.toString()
   });
+
+  function promise(done) {
+    function onDone() {
+      if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        var responseObj = httpRequest.response || {};
+        done(responseObj.payload);
+      }
+    }
+    httpRequest.onreadystatechange = onDone;
+
+    return onDone;
+  }
+
+  httpRequest.open("POST", this._serverUrl, isAsynchronous);
+  httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   httpRequest.send("json=" + json);
+
+  return { done: promise };
 };
 
 // ##Purple Robot API
