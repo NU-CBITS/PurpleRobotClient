@@ -23,6 +23,11 @@ PurpleRobot.prototype.toString = function() {
   return this._script;
 };
 
+// Returns the escaped string representation of the method call.
+PurpleRobot.prototype.toJson = function() {
+  return JSON.stringify(this.toString());
+};
+
 // Executes the current method (and any previously chained methods) by
 // making an HTTP request to the Purple Robot HTTP server.
 PurpleRobot.prototype.execute = function() {
@@ -68,6 +73,7 @@ PurpleRobot.prototype.emitReading = function(name, value) {
 //     pr.emitToast("howdy", true);
 PurpleRobot.prototype.emitToast = function(message, hasLongDuration) {
   hasLongDuration = (typeof hasLongDuration === "boolean") ? hasLongDuration : true;
+
   return this._apiMethod("emitToast('" + message + "', " + hasLongDuration + ")");
 };
 
@@ -78,11 +84,16 @@ PurpleRobot.prototype.fetchConfig = function() {
 // Returns a value stored for the namespace and key provided. Generally
 // paired with `persistEncryptedString`.
 //
-// Example
+// Examples
 //
-//     pr.fetchEncryptedString("my stuff", "x");
-PurpleRobot.prototype.fetchEncryptedString = function(namespace, key) {
-  return this._apiMethod("fetchEncryptedString('" + namespace + "', '" + key + "')");
+//     pr.fetchEncryptedString("x", "my stuff");
+//     pr.fetchEncryptedString("y");
+PurpleRobot.prototype.fetchEncryptedString = function(key, namespace) {
+  if (typeof namespace === "undefined") {
+    return this._apiMethod("fetchEncryptedString('" + key + "')");
+  } else {
+    return this._apiMethod("fetchEncryptedString('" + namespace + "', '" + key + "')");
+  }
 };
 
 PurpleRobot.prototype.fetchNamespace = function(namespace) {
@@ -145,12 +156,23 @@ PurpleRobot.prototype.parseDate = function(dateString) {
 
 // Stores the *value* within the *namespace*, identified by the *key*.
 //
-// Example
+// Examples
 //
-//     pr.persistEncryptedString("app Q", "foo", "bar");
-PurpleRobot.prototype.persistEncryptedString = function(namespace, key, value) {
+//     pr.persistEncryptedString("foo", "bar", "app Q");
+//     pr.persistEncryptedString("foo", "bar");
+PurpleRobot.prototype.persistEncryptedString = function(key, value, namespace) {
+  if (typeof namespace === "undefined") {
+    return this._apiMethod("persistEncryptedString('" + key + "', '" + value + "')");
+  } else {
+    return this._apiMethod("persistEncryptedString('" + namespace + "', '" + key + "', '" + value + "')");
+  }
 };
 
+// Plays a default Android notification sound.
+//
+// Example
+//
+//     pr.playDefaultTone();
 PurpleRobot.prototype.playDefaultTone = function() {
   return this._apiMethod("playDefaultTone()");
 };
@@ -167,7 +189,15 @@ PurpleRobot.prototype.readings = function() {
 PurpleRobot.prototype.readUrl = function(url) {
 };
 
+// Runs a script immediately.
+//
+// @param script a PurpleRobot instance
+//
+// Example
+//
+//     pr.runScript(pr.emitToast("toasty"));
 PurpleRobot.prototype.runScript = function(script) {
+  return this._apiMethod("runScript(" + script.toJson() + ")");
 };
 
 // Schedules a script to run a specified number of minutes in the future
@@ -176,8 +206,10 @@ PurpleRobot.prototype.runScript = function(script) {
 // Example
 //
 //     pr.scheduleScript("fancy script", 5, pr.playDefaultTone());
-PurpleRobot.prototype.scheduleScript = function(name, minutes, method) {
-  return this._apiMethod("scheduleScript('" + name + "', '" + units + "', " + JSON.stringify(method.toString()) + ")");
+PurpleRobot.prototype.scheduleScript = function(name, minutes, script) {
+  var timestampStr = "(function() { var now = new Date(); var scheduled = new Date(now.getTime() + " + minutes + " * 60000); var pad = function(n) { return n < 10 ? '0' + n : n; }; return '' + scheduled.getFullYear() + pad(scheduled.getMonth() + 1) + pad(scheduled.getDate()) + 'T' + pad(scheduled.getHours()) + pad(scheduled.getMinutes()) + pad(scheduled.getSeconds()); })()";
+
+  return this._apiMethod("scheduleScript('" + name + "', " + timestampStr + ", " + script.toJson() + ")");
 };
 
 PurpleRobot.prototype.showApplicationLaunchNotification = function(title, message, applicationName, displayWhen, isPersistent, launchParameters, script) {
@@ -199,8 +231,8 @@ PurpleRobot.prototype.showApplicationLaunchNotification = function(title, messag
 PurpleRobot.prototype.showNativeDialog = function(options) {
   return this._apiMethod("showNativeDialog('" + options.title + "', '" +
     options.message + "', '" + options.buttonLabelA + "', '" +
-    options.buttonLabelB + "', " + JSON.stringify(options.scriptA.toString()) +
-    ", " + JSON.stringify(options.scriptB.toString()) + ")");
+    options.buttonLabelB + "', " + options.scriptA.toJson() +
+    ", " + options.scriptB.toJson() + ")");
 };
 
 PurpleRobot.prototype.updateConfig = function(options) {

@@ -25,4 +25,62 @@ describe("PurpleRobot", function() {
     }).toString();
     expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\");");
   });
+
+  describe("should implement API methods", function() {
+    it("#emitReading", function() {
+      expect(pr.emitReading("a", "b").toString())
+        .toEqual("PurpleRobot.emitReading('a', '\"b\"');");
+    });
+
+    it("#emitToast", function() {
+      expect(pr.emitToast("a").toString())
+        .toEqual("PurpleRobot.emitToast('a', true);");
+      expect(pr.emitToast("a", true).toString())
+        .toEqual("PurpleRobot.emitToast('a', true);");
+      expect(pr.emitToast("a", false).toString())
+        .toEqual("PurpleRobot.emitToast('a', false);");
+    });
+
+    it("#fetchConfig", function() {
+      expect(pr.fetchConfig().toString())
+        .toEqual("PurpleRobot.fetchConfig();");
+    });
+
+    it("#fetchEncryptedString", function() {
+      expect(pr.fetchEncryptedString("key", "namespace").toString())
+        .toEqual("PurpleRobot.fetchEncryptedString('namespace', 'key');");
+      expect(pr.fetchEncryptedString("key").toString())
+        .toEqual("PurpleRobot.fetchEncryptedString('key');");
+    });
+
+    it("#launchApplication", function() {
+      expect(pr.launchApplication("foo.bar").toString())
+        .toEqual("PurpleRobot.launchApplication('foo.bar');");
+    });
+
+    it("#persistEncryptedString", function() {
+      expect(pr.persistEncryptedString("key", "val", "namespace").toString())
+        .toEqual("PurpleRobot.persistEncryptedString('namespace', 'key', 'val');");
+      expect(pr.persistEncryptedString("key", "val").toString())
+        .toEqual("PurpleRobot.persistEncryptedString('key', 'val');");
+    });
+
+    it("#playDefaultTone", function() {
+      expect(pr.playDefaultTone().toString())
+        .toEqual("PurpleRobot.playDefaultTone();");
+    });
+
+    it("#runScript", function() {
+      expect(pr.runScript(pr.playDefaultTone()).toString())
+        .toEqual("PurpleRobot.runScript(\"PurpleRobot.playDefaultTone();\");");
+    });
+
+    it("#scheduleScript", function() {
+      expect(pr.scheduleScript("Tone 1", 3, pr.playDefaultTone()).toString())
+        .toEqual("PurpleRobot.scheduleScript('Tone 1', (function() { var now = new Date(); var scheduled = new Date(now.getTime() + 3 * 60000); var pad = function(n) { return n < 10 ? '0' + n : n; }; return '' + scheduled.getFullYear() + pad(scheduled.getMonth() + 1) + pad(scheduled.getDate()) + 'T' + pad(scheduled.getHours()) + pad(scheduled.getMinutes()) + pad(scheduled.getSeconds()); })(), \"PurpleRobot.playDefaultTone();\");");
+    });
+
+    it("#showNativeDialog", function() {
+    });
+  });
 });
