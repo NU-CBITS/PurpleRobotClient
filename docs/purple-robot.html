@@ -440,21 +440,6 @@ scripts to be run when each is pressed.</p>
 };
 
 PurpleRobot.prototype.updateConfig = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
-};
-
-PurpleRobot.prototype.updateTrigger = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(triggerId, parameters)</span> {</span>
-};
-
-PurpleRobot.prototype.updateWidget = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(parameters)</span> {</span>
-};
-
-PurpleRobot.prototype.version = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-};
-
-PurpleRobot.prototype.vibrate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(pattern)</span> {</span>
-};
-
-PurpleRobot.prototype.widgets = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
 };</pre></div></div>
             
         </li>
@@ -465,6 +450,77 @@ PurpleRobot.prototype.widgets = <span class="hljs-function"><span class="hljs-ke
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Adds or updates a Purple Robot trigger to be run at a time and with a
+recurrence rule.</p>
+<p>Example</p>
+<p>The following would emit a toast daily at the same time:</p>
+<pre><code>pr.updateTrigger({
+  script: pr.emitToast(<span class="hljs-string">"butter"</span>),
+  startAt: <span class="hljs-string">"20140505T020304"</span>,
+  endAt: <span class="hljs-string">"20140505T020404"</span>
+});
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.updateTrigger = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
+  options = options || {};
+
+  <span class="hljs-keyword">var</span> timestamp = (<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()).getTime();
+  <span class="hljs-keyword">var</span> triggerId = options.triggerId || (<span class="hljs-string">"TRIGGER-"</span> + timestamp);
+  <span class="hljs-keyword">var</span> triggerJson = <span class="hljs-built_in">JSON</span>.stringify({
+    type: options.type || <span class="hljs-string">"datetime"</span>,
+    name: triggerId,
+    identifier: triggerId,
+    action: options.script.toString(),
+    datetime_start: options.startAt,
+    datetime_end: options.endAt,
+    datetime_repeat: options.repeatRule || <span class="hljs-string">"FREQ=DAILY;INTERVAL=1"</span>
+  });
+
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"updateTrigger('"</span> + triggerId + <span class="hljs-string">"', "</span> + triggerJson + <span class="hljs-string">")"</span>);
+};
+
+PurpleRobot.prototype.updateWidget = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(parameters)</span> {</span>
+};
+
+PurpleRobot.prototype.version = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Vibrates the phone with a preset pattern.</p>
+<p>Examples</p>
+<pre><code>pr.vibrate(<span class="hljs-string">"buzz"</span>);
+pr.vibrate(<span class="hljs-string">"blip"</span>);
+pr.vibrate(<span class="hljs-string">"sos"</span>);
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.vibrate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(pattern)</span> {</span>
+  pattern = pattern || <span class="hljs-string">"buzz"</span>;
+
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"vibrate('"</span> + pattern + <span class="hljs-string">"')"</span>);
+};
+
+PurpleRobot.prototype.widgets = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h2 id="further-examples">Further examples</h2>
 <p>Example of nesting</p>
