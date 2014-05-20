@@ -11,7 +11,7 @@ describe("PurpleRobot", function() {
 
   it("should be able to generate a string representation of chained methods", function() {
     var str = pr.emitReading("a", "1").playDefaultTone().toString();
-    expect(str).toEqual("PurpleRobot.emitReading('a', '\"1\"'); PurpleRobot.playDefaultTone();");
+    expect(str).toEqual("PurpleRobot.emitReading('a', \"1\"); PurpleRobot.playDefaultTone();");
   });
 
   it("should generate a string representing nested methods", function() {
@@ -29,7 +29,7 @@ describe("PurpleRobot", function() {
   describe("should implement API methods", function() {
     it("#emitReading", function() {
       expect(pr.emitReading("a", "b").toString())
-        .toEqual("PurpleRobot.emitReading('a', '\"b\"');");
+        .toEqual("PurpleRobot.emitReading('a', \"b\");");
     });
 
     it("#emitToast", function() {

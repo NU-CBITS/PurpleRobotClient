@@ -63,7 +63,7 @@ PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
 //
 //     pr.emitReading("sandwich", "pb&j").execute();
 PurpleRobot.prototype.emitReading = function(name, value) {
-  return this._apiMethod("emitReading('" + name + "', '" + JSON.stringify(value) + "')");
+  return this._apiMethod("emitReading('" + name + "', " + JSON.stringify(value) + ")");
 };
 
 // Displays a native toast message on the phone.
