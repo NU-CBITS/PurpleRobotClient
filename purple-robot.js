@@ -55,7 +55,7 @@ PurpleRobot.prototype.execute = function(callbacks) {
       if (httpRequest.response === null) {
         callbacks.fail();
       } else {
-        callbacks.done(httpRequest.response.payload);
+        callbacks.done(JSON.parse(httpRequest.response).payload);
       }
     }
   }

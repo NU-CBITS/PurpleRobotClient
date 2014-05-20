@@ -145,7 +145,7 @@ making an HTTP request to the Purple Robot HTTP server.</p>
       <span class="hljs-keyword">if</span> (httpRequest.response === <span class="hljs-literal">null</span>) {
         callbacks.fail();
       } <span class="hljs-keyword">else</span> {
-        callbacks.done(httpRequest.response.payload);
+        callbacks.done(<span class="hljs-built_in">JSON</span>.parse(httpRequest.response).payload);
       }
     }
   }
