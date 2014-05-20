@@ -16,7 +16,7 @@ PurpleRobot.prototype._apiMethod = function(nextScript) {
     serverUrl: this._serverUrl,
     script: [this._script, "PurpleRobot." + nextScript + ";"].join(" ").trim()
   });
-}
+};
 
 // Returns the string representation of the method call.
 PurpleRobot.prototype.toString = function() {
@@ -30,15 +30,19 @@ PurpleRobot.prototype.toJson = function() {
 
 // Executes the current method (and any previously chained methods) by
 // making an HTTP request to the Purple Robot HTTP server.
-// Returns a simplistic promise.
 //
 // Example
 //
-//     pr.fetchEncryptedString("foo").execute()
-//       .done(function(payload) {
-//         console.log(payload);
-//       });
-PurpleRobot.prototype.execute = function() {
+//     pr.fetchEncryptedString("foo").execute({
+//       done: function(payload) {
+//               console.log(payload);
+//             }
+//     })
+PurpleRobot.prototype.execute = function(callbacks) {
+  callbacks = callbacks || {};
+  callbacks.done = callbacks.done || function() {};
+  callbacks.fail = callbacks.fail || function() {};
+
   var httpRequest = new XMLHttpRequest();
   var isAsynchronous = true;
   var json = JSON.stringify({
@@ -46,23 +50,20 @@ PurpleRobot.prototype.execute = function() {
     script: this.toString()
   });
 
-  function promise(done) {
-    function onDone() {
-      if (httpRequest.readyState === XMLHttpRequest.DONE) {
-        var responseObj = httpRequest.response || {};
-        done(responseObj.payload);
+  function onChange() {
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+      if (httpRequest.response === null) {
+        callbacks.fail();
+      } else {
+        callbacks.done(httpRequest.response.payload);
       }
     }
-    httpRequest.onreadystatechange = onDone;
-
-    return onDone;
   }
 
+  httpRequest.onreadystatechange = onChange;
   httpRequest.open("POST", this._serverUrl, isAsynchronous);
   httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   httpRequest.send("json=" + json);
-
-  return { done: promise };
 };
 
 // ##Purple Robot API
