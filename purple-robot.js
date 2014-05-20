@@ -144,6 +144,17 @@ PurpleRobot.prototype.fetchTrigger = function(id) {
 PurpleRobot.prototype.fetchTriggerIds = function() {
 };
 
+// Returns the Purple Robot configured user id string.
+//
+// Example
+//
+//     pr.fetchUserId().execute().done(function(userId) {
+//       console.log(userId);
+//     });
+PurpleRobot.prototype.fetchUserId = function() {
+  return this._apiMethod("fetchUserId()");
+};
+
 PurpleRobot.prototype.fetchWidget = function(id) {
 };
 

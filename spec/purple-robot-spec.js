@@ -58,6 +58,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.fetchEncryptedString('key');");
     });
 
+    it("#fetchUserId", function() {
+      expect(pr.fetchUserId().toString())
+        .toEqual("PurpleRobot.fetchUserId();");
+    });
+
     it("#launchApplication", function() {
       expect(pr.launchApplication("foo.bar").toString())
         .toEqual("PurpleRobot.launchApplication('foo.bar');");
