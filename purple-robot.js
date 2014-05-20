@@ -238,7 +238,34 @@ PurpleRobot.prototype.showNativeDialog = function(options) {
 PurpleRobot.prototype.updateConfig = function(options) {
 };
 
-PurpleRobot.prototype.updateTrigger = function(triggerId, parameters) {
+// Adds or updates a Purple Robot trigger to be run at a time and with a
+// recurrence rule.
+//
+// Example
+//
+// The following would emit a toast daily at the same time:
+//
+//     pr.updateTrigger({
+//       script: pr.emitToast("butter"),
+//       startAt: "20140505T020304",
+//       endAt: "20140505T020404"
+//     });
+PurpleRobot.prototype.updateTrigger = function(options) {
+  options = options || {};
+
+  var timestamp = (new Date()).getTime();
+  var triggerId = options.triggerId || ("TRIGGER-" + timestamp);
+  var triggerJson = JSON.stringify({
+    type: options.type || "datetime",
+    name: triggerId,
+    identifier: triggerId,
+    action: options.script.toString(),
+    datetime_start: options.startAt,
+    datetime_end: options.endAt,
+    datetime_repeat: options.repeatRule || "FREQ=DAILY;INTERVAL=1"
+  });
+
+  return this._apiMethod("updateTrigger('" + triggerId + "', " + triggerJson + ")");
 };
 
 PurpleRobot.prototype.updateWidget = function(parameters) {
@@ -247,7 +274,17 @@ PurpleRobot.prototype.updateWidget = function(parameters) {
 PurpleRobot.prototype.version = function() {
 };
 
+// Vibrates the phone with a preset pattern.
+//
+// Examples
+//
+//     pr.vibrate("buzz");
+//     pr.vibrate("blip");
+//     pr.vibrate("sos");
 PurpleRobot.prototype.vibrate = function(pattern) {
+  pattern = pattern || "buzz";
+
+  return this._apiMethod("vibrate('" + pattern + "')");
 };
 
 PurpleRobot.prototype.widgets = function() {

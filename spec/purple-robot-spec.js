@@ -81,6 +81,32 @@ describe("PurpleRobot", function() {
     });
 
     it("#showNativeDialog", function() {
+      var str = pr.showNativeDialog({
+        title: "My Dialog",
+        message: "What say you?",
+        buttonLabelA: "cheers",
+        scriptA: pr.emitToast("cheers!"),
+        buttonLabelB: "boo",
+        scriptB: pr.emitToast("boo!")
+      }).toString();
+
+      expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\");");
+    });
+
+    it("#updateTrigger", function() {
+      var str = pr.updateTrigger({
+        script: pr.emitToast("butter"),
+        triggerId: "Z",
+        startAt: "20140505T020304",
+        endAt: "20140505T020404"
+      }).toString();
+
+      expect(str).toEqual("PurpleRobot.updateTrigger('Z', {\"type\":\"datetime\",\"name\":\"Z\",\"identifier\":\"Z\",\"action\":\"PurpleRobot.emitToast('butter', true);\",\"datetime_start\":\"20140505T020304\",\"datetime_end\":\"20140505T020404\",\"datetime_repeat\":\"FREQ=DAILY;INTERVAL=1\"});");
+    });
+
+    it("#vibrate", function() {
+      expect(pr.vibrate().toString()).toEqual("PurpleRobot.vibrate('buzz');");
+      expect(pr.vibrate("sos").toString()).toEqual("PurpleRobot.vibrate('sos');");
     });
   });
 });
