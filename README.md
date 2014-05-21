@@ -1,15 +1,26 @@
 # Purple Robot Client
 
+A library that simplifies command passing to [Purple Robot](https://github.com/cbitstech/Purple-Robot-Manager)
+via its HTTP server and JavaScript API. Scripts are generated as strings and
+sent as JSON, then deserialized and interpreted by Purple Robot.
+
 ## purple-robot.js
 
 [Documented source code with examples](http://cbitstech.github.io/PurpleRobotClient/docs/purple-robot.html)
 
-### How to update documentation
+### Updating the documentation
 
 Install [docco](http://jashkenas.github.io/docco/): `sudo npm install -g docco`
 
 Run docco: `docco purple-robot.js`
 
-### Run specs
+### Running specs
 
-open `spec/SpecRunner.html` in a browser
+#### In a browser
+
+open `spec/SpecRunner.html`
+
+#### Headless
+
+1. Install [PhantomJS](http://phantomjs.org/download.html)
+2. Run `phantomjs spec/run-jasmine.js spec/SpecRunner.html`
