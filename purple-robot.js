@@ -86,6 +86,15 @@ PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
   return this._apiMethod("/* dateFromTimestamp NOT IMPLEMENTED YET */");
 };
 
+// Disables the Purple Robot trigger identified by *id*;
+//
+// Example
+//
+//     pr.disableTrigger("MY-TRIGGER");
+PurpleRobot.prototype.disableTrigger = function(id) {
+  return this._apiMethod("disableTrigger('" + id + "')");
+};
+
 // Transmits a name value pair to be stored in Purple Robot Warehouse. The
 // table name will be *name*, and the columns and data values will be
 // extrapolated from the *value*.

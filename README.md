@@ -8,6 +8,10 @@ sent as JSON, then deserialized and interpreted by Purple Robot.
 
 [Documented source code with examples](http://cbitstech.github.io/PurpleRobotClient/docs/purple-robot.html)
 
+### Installing
+
+`bower install git@github.com:cbitstech/PurpleRobotClient.git#1.5.2`
+
 ### Updating the documentation
 
 Install [docco](http://jashkenas.github.io/docco/): `sudo npm install -g docco`

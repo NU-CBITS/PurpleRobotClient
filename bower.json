@@ -13,6 +13,7 @@
     "default-triggers.js",
     "index.html",
     "purple-robot-client.js",
+    "run_specs",
     "test-prompt copy.js",
     "docs",
     "spec"

@@ -32,6 +32,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.cancelScriptNotification();");
     });
 
+    it("#disableTrigger", function() {
+      expect(pr.disableTrigger("MY-TRIGGER").toString())
+        .toEqual("PurpleRobot.disableTrigger('MY-TRIGGER');");
+    });
+
     it("#emitReading", function() {
       expect(pr.emitReading("a", "b").toString())
         .toEqual("PurpleRobot.emitReading('a', \"b\");");
