@@ -3,6 +3,7 @@ describe("PurpleRobot", function() {
 
   beforeEach(function() {
     pr = new PurpleRobot();
+    delete localStorage.prQueue;
   });
 
   it("should be able to generate a string representation of a method", function() {
@@ -24,6 +25,30 @@ describe("PurpleRobot", function() {
       scriptB: pr.emitToast("boo!")
     }).toString();
     expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\");");
+  });
+
+  describe("#save", function() {
+    it("should save a string representation in localStorage", function() {
+      pr.emitReading("foo", "bar").save();
+      expect(localStorage.prQueue)
+        .toEqual("PurpleRobot.emitReading('foo', \"bar\");");
+    });
+  });
+
+  describe("#restore", function() {
+    it("should restore a string representation from localStorage", function() {
+      localStorage.prQueue = "PurpleRobot.emitToast('toast');";
+      pr.restore();
+      expect(pr.toString()).toEqual("PurpleRobot.emitToast('toast');");
+    });
+  });
+
+  describe("#destroy", function() {
+    it("should remove a string representation from localStorage", function() {
+      localStorage.prQueue = "PurpleRobot.emitToast('toast');";
+      pr.destroy();
+      expect(localStorage.prQueue).toBeUndefined();
+    });
   });
 
   describe("should implement API methods", function() {

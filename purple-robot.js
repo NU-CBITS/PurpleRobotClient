@@ -66,6 +66,35 @@ PurpleRobot.prototype.execute = function(callbacks) {
   httpRequest.send("json=" + json);
 };
 
+// Saves a string representation of script(s) to localStorage.
+//
+// Example
+// 
+//     pr.emitReading("foo", "bar").save();
+PurpleRobot.prototype.save = function() {
+  localStorage.prQueue = localStorage.prQueue || "";
+  localStorage.prQueue += this.toString();
+};
+
+// Restores saved script(s) from localStorage.
+//
+// Example
+//
+//     pr.restore().execute();
+PurpleRobot.prototype.restore = function() {
+  localStorage.prQueue = localStorage.prQueue || "";
+  this._script = localStorage.prQueue;
+};
+
+// Deletes saved script(s) from localStorage.
+//
+// Example
+//
+//     pr.destroy();
+PurpleRobot.prototype.destroy = function() {
+  delete localStorage.prQueue;
+};
+
 // ##Purple Robot API
 
 // Broadcasts an Android intent.
