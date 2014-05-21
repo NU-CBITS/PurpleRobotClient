@@ -1,0 +1,20 @@
+{
+  "name": "PurpleRobotClient",
+  "version": "1.5.2",
+  "homepage": "https://github.com/cbitstech/PurpleRobotClient",
+  "authors": [
+    "Mark Begale <m-begale@northwestern.edu>",
+    "Eric Carty-Fickes <ericcf@northwestern.edu>"
+  ],
+  "description": "JavaScript client for Purple Robot services",
+  "main": "purple-robot.js",
+  "ignore": [
+    "README.md",
+    "default-triggers.js",
+    "index.html",
+    "purple-robot-client.js",
+    "test-prompt copy.js",
+    "docs",
+    "spec"
+  ]
+}
