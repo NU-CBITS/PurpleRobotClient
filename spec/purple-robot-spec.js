@@ -29,7 +29,8 @@ describe("PurpleRobot", function() {
 
   describe("#save", function() {
     it("should save a string representation in localStorage", function() {
-      pr.emitReading("foo", "bar").save();
+      expect(pr.emitReading("foo", "bar").save().toString())
+        .toEqual("PurpleRobot.emitReading('foo', \"bar\");");
       expect(localStorage.prQueue)
         .toEqual("PurpleRobot.emitReading('foo', \"bar\");");
     });
@@ -38,8 +39,8 @@ describe("PurpleRobot", function() {
   describe("#restore", function() {
     it("should restore a string representation from localStorage", function() {
       localStorage.prQueue = "PurpleRobot.emitToast('toast');";
-      pr.restore();
-      expect(pr.toString()).toEqual("PurpleRobot.emitToast('toast');");
+      expect(pr.restore().toString())
+        .toEqual("PurpleRobot.emitToast('toast');");
     });
   });
 

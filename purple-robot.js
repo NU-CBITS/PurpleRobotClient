@@ -8,7 +8,7 @@ function PurpleRobot(options) {
 }
 
 // The version of the API, corresponding to the version of Purple Robot.
-PurpleRobot.apiVersion = "1.5.2";
+PurpleRobot.apiVersion = "1.5.2.1";
 
 // Enables chaining of method calls.
 PurpleRobot.prototype._apiMethod = function(nextScript) {
@@ -74,6 +74,8 @@ PurpleRobot.prototype.execute = function(callbacks) {
 PurpleRobot.prototype.save = function() {
   localStorage.prQueue = localStorage.prQueue || "";
   localStorage.prQueue += this.toString();
+
+  return this;
 };
 
 // Restores saved script(s) from localStorage.
@@ -84,6 +86,8 @@ PurpleRobot.prototype.save = function() {
 PurpleRobot.prototype.restore = function() {
   localStorage.prQueue = localStorage.prQueue || "";
   this._script = localStorage.prQueue;
+
+  return this;
 };
 
 // Deletes saved script(s) from localStorage.
