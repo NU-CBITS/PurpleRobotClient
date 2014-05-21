@@ -254,6 +254,15 @@ PurpleRobot.prototype.scheduleScript = function(name, minutes, script) {
   return this._apiMethod("scheduleScript('" + name + "', " + timestampStr + ", " + script.toJson() + ")");
 };
 
+// Sets the Purple Robot user id string.
+//
+// Example
+//
+//     pr.setUserId("Bobbie");
+PurpleRobot.prototype.setUserId = function(value) {
+  return this._apiMethod("setUserId('" + value + "')");
+};
+
 PurpleRobot.prototype.showApplicationLaunchNotification = function(title, message, applicationName, displayWhen, isPersistent, launchParameters, script) {
 };
 

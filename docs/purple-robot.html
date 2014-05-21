@@ -464,9 +464,6 @@ PurpleRobot.prototype.readUrl = <span class="hljs-function"><span class="hljs-ke
   <span class="hljs-keyword">var</span> timestampStr = <span class="hljs-string">"(function() { var now = new Date(); var scheduled = new Date(now.getTime() + "</span> + minutes + <span class="hljs-string">" * 60000); var pad = function(n) { return n &lt; 10 ? '0' + n : n; }; return '' + scheduled.getFullYear() + pad(scheduled.getMonth() + 1) + pad(scheduled.getDate()) + 'T' + pad(scheduled.getHours()) + pad(scheduled.getMinutes()) + pad(scheduled.getSeconds()); })()"</span>;
 
   <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"scheduleScript('"</span> + name + <span class="hljs-string">"', "</span> + timestampStr + <span class="hljs-string">", "</span> + script.toJson() + <span class="hljs-string">")"</span>);
-};
-
-PurpleRobot.prototype.showApplicationLaunchNotification = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(title, message, applicationName, displayWhen, isPersistent, launchParameters, script)</span> {</span>
 };</pre></div></div>
             
         </li>
@@ -477,6 +474,28 @@ PurpleRobot.prototype.showApplicationLaunchNotification = <span class="hljs-func
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Sets the Purple Robot user id string.</p>
+<p>Example</p>
+<pre><code>pr.setUserId(<span class="hljs-string">"Bobbie"</span>);
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.setUserId = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._apiMethod(<span class="hljs-string">"setUserId('"</span> + value + <span class="hljs-string">"')"</span>);
+};
+
+PurpleRobot.prototype.showApplicationLaunchNotification = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(title, message, applicationName, displayWhen, isPersistent, launchParameters, script)</span> {</span>
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Opens an Android dialog with two buttons, <em>A</em> and <em>B</em>, and associates
 scripts to be run when each is pressed.</p>
@@ -502,11 +521,11 @@ scripts to be run when each is pressed.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Adds a notification to the the tray and atttaches a script to be run when
 it is pressed.</p>
@@ -535,11 +554,11 @@ PurpleRobot.prototype.updateConfig = <span class="hljs-function"><span class="hl
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Adds or updates a Purple Robot trigger to be run at a time and with a
 recurrence rule.</p>
@@ -580,11 +599,11 @@ PurpleRobot.prototype.version = <span class="hljs-function"><span class="hljs-ke
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Vibrates the phone with a preset pattern.</p>
 <p>Examples</p>
@@ -606,11 +625,11 @@ PurpleRobot.prototype.widgets = <span class="hljs-function"><span class="hljs-ke
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <h2 id="further-examples">Further examples</h2>
 <p>Example of nesting</p>

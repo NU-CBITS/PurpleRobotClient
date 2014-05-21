@@ -90,6 +90,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.scheduleScript('Tone 1', (function() { var now = new Date(); var scheduled = new Date(now.getTime() + 3 * 60000); var pad = function(n) { return n < 10 ? '0' + n : n; }; return '' + scheduled.getFullYear() + pad(scheduled.getMonth() + 1) + pad(scheduled.getDate()) + 'T' + pad(scheduled.getHours()) + pad(scheduled.getMinutes()) + pad(scheduled.getSeconds()); })(), \"PurpleRobot.playDefaultTone();\");");
     });
 
+    it("#setUserId", function() {
+      expect(pr.setUserId("Bobbie").toString())
+        .toEqual("PurpleRobot.setUserId('Bobbie');");
+    });
+
     it("#showNativeDialog", function() {
       var str = pr.showNativeDialog({
         title: "My Dialog",
