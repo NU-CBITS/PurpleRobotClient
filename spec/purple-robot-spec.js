@@ -99,6 +99,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.launchApplication('foo.bar');");
     });
 
+    it("#log", function() {
+      expect(pr.log("wing", { zing: "ding" }).toString())
+        .toEqual("PurpleRobot.log('wing', {\"zing\":\"ding\"});");
+    });
+
     it("#persistEncryptedString", function() {
       expect(pr.persistEncryptedString("key", "val", "namespace").toString())
         .toEqual("PurpleRobot.persistEncryptedString('namespace', 'key', 'val');");

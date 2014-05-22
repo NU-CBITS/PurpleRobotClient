@@ -223,7 +223,13 @@ PurpleRobot.prototype.launchUrl = function(url) {
 PurpleRobot.prototype.loadLibrary = function(name) {
 };
 
+// Logs an event to the PR event capturing service as well as the Android log.
+//
+// Example
+//
+//     pr.log("zing", { wing: "ding" });
 PurpleRobot.prototype.log = function(name, value) {
+  return this._apiMethod("log('" + name + "', " + JSON.stringify(value) + ")");
 };
 
 PurpleRobot.prototype.models = function() {
