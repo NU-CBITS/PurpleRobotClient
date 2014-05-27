@@ -8,7 +8,7 @@ function PurpleRobot(options) {
 }
 
 // The version of the API, corresponding to the version of Purple Robot.
-PurpleRobot.apiVersion = "1.5.2.1";
+PurpleRobot.apiVersion = "1.5.2.3";
 
 // Enables chaining of method calls.
 PurpleRobot.prototype._apiMethod = function(nextScript) {
@@ -71,6 +71,8 @@ PurpleRobot.prototype.execute = function(callbacks) {
 // Example
 // 
 //     pr.emitReading("foo", "bar").save();
+//
+// `@returns {Object}` Returns the current object instance.
 PurpleRobot.prototype.save = function() {
   localStorage.prQueue = localStorage.prQueue || "";
   localStorage.prQueue += this.toString();
@@ -83,6 +85,8 @@ PurpleRobot.prototype.save = function() {
 // Example
 //
 //     pr.restore().execute();
+//
+// `@returns {Object}` Returns the current object instance.
 PurpleRobot.prototype.restore = function() {
   localStorage.prQueue = localStorage.prQueue || "";
   this._script = localStorage.prQueue;
@@ -95,13 +99,19 @@ PurpleRobot.prototype.restore = function() {
 // Example
 //
 //     pr.destroy();
+//
+// `@returns {Object}` Returns the current object instance.
 PurpleRobot.prototype.destroy = function() {
   delete localStorage.prQueue;
+
+  return this;
 };
 
 // ##Purple Robot API
 
 // Broadcasts an Android intent.
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.broadcastIntent = function(action, options) {
   return this._apiMethod("/* broadcastIntent NOT IMPLEMENTED YET */");
 };
@@ -111,12 +121,22 @@ PurpleRobot.prototype.broadcastIntent = function(action, options) {
 // Example
 //
 //     pr.cancelScriptNotification();
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.cancelScriptNotification = function() {
   return this._apiMethod("cancelScriptNotification()");
 };
 
+// Returns a Date object given an epoch timestamp.
+//
+// Example
+//
+//     pr.dateFromTimestamp(1401205124000);
+//
+// `@param {number} epoch` The Unix epoch timestamp including milliseconds.
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
-  return this._apiMethod("/* dateFromTimestamp NOT IMPLEMENTED YET */");
+  return this._apiMethod("dateFromTimestamp(" + epoch + ")");
 };
 
 // Disables the Purple Robot trigger identified by *id*;
@@ -124,6 +144,8 @@ PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
 // Example
 //
 //     pr.disableTrigger("MY-TRIGGER");
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.disableTrigger = function(id) {
   return this._apiMethod("disableTrigger('" + id + "')");
 };
@@ -135,6 +157,8 @@ PurpleRobot.prototype.disableTrigger = function(id) {
 // Example
 //
 //     pr.emitReading("sandwich", "pb&j").execute();
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.emitReading = function(name, value) {
   return this._apiMethod("emitReading('" + name + "', " + JSON.stringify(value) + ")");
 };
@@ -144,6 +168,8 @@ PurpleRobot.prototype.emitReading = function(name, value) {
 // Example
 //
 //     pr.emitToast("howdy", true);
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.emitToast = function(message, hasLongDuration) {
   hasLongDuration = (typeof hasLongDuration === "boolean") ? hasLongDuration : true;
 
@@ -161,6 +187,8 @@ PurpleRobot.prototype.fetchConfig = function() {
 //
 //     pr.fetchEncryptedString("x", "my stuff");
 //     pr.fetchEncryptedString("y");
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.fetchEncryptedString = function(key, namespace) {
   if (typeof namespace === "undefined") {
     return this._apiMethod("fetchEncryptedString('" + key + "')");
@@ -194,6 +222,8 @@ PurpleRobot.prototype.fetchTriggerIds = function() {
 //     pr.fetchUserId().execute().done(function(userId) {
 //       console.log(userId);
 //     });
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.fetchUserId = function() {
   return this._apiMethod("fetchUserId()");
 };
@@ -210,6 +240,8 @@ PurpleRobot.prototype.formatDate = function(date) {
 // Example
 //
 //     pr.launchApplication("edu.northwestern.cbits.awesome_app");
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.launchApplication = function(name) {
   return this._apiMethod("launchApplication('" + name + "')");
 };
@@ -228,6 +260,8 @@ PurpleRobot.prototype.loadLibrary = function(name) {
 // Example
 //
 //     pr.log("zing", { wing: "ding" });
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.log = function(name, value) {
   return this._apiMethod("log('" + name + "', " + JSON.stringify(value) + ")");
 };
@@ -250,6 +284,8 @@ PurpleRobot.prototype.parseDate = function(dateString) {
 //
 //     pr.persistEncryptedString("foo", "bar", "app Q");
 //     pr.persistEncryptedString("foo", "bar");
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.persistEncryptedString = function(key, value, namespace) {
   if (typeof namespace === "undefined") {
     return this._apiMethod("persistEncryptedString('" + key + "', '" + value + "')");
@@ -263,11 +299,21 @@ PurpleRobot.prototype.persistEncryptedString = function(key, value, namespace) {
 // Example
 //
 //     pr.playDefaultTone();
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.playDefaultTone = function() {
   return this._apiMethod("playDefaultTone()");
 };
 
+// Plays an existing notification sound on an Android phone.
+//
+// Example
+//
+//     pr.playTone("Hojus");
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.playTone = function(tone) {
+  return this._apiMethod("playTone('" + tone + "')");
 };
 
 PurpleRobot.prototype.predictions = function() {
@@ -276,7 +322,15 @@ PurpleRobot.prototype.predictions = function() {
 PurpleRobot.prototype.readings = function() {
 };
 
+// Attempts to GET a URL and return the body as a string.
+//
+// Example
+//
+//     pr.readUrl("http://www.northwestern.edu");
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.readUrl = function(url) {
+  return this._apiMethod("readUrl('" + url + "')");
 };
 
 // Runs a script immediately.
@@ -286,6 +340,8 @@ PurpleRobot.prototype.readUrl = function(url) {
 // Example
 //
 //     pr.runScript(pr.emitToast("toasty"));
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.runScript = function(script) {
   return this._apiMethod("runScript(" + script.toJson() + ")");
 };
@@ -296,6 +352,8 @@ PurpleRobot.prototype.runScript = function(script) {
 // Example
 //
 //     pr.scheduleScript("fancy script", 5, pr.playDefaultTone());
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.scheduleScript = function(name, minutes, script) {
   var timestampStr = "(function() { var now = new Date(); var scheduled = new Date(now.getTime() + " + minutes + " * 60000); var pad = function(n) { return n < 10 ? '0' + n : n; }; return '' + scheduled.getFullYear() + pad(scheduled.getMonth() + 1) + pad(scheduled.getDate()) + 'T' + pad(scheduled.getHours()) + pad(scheduled.getMinutes()) + pad(scheduled.getSeconds()); })()";
 
@@ -307,6 +365,8 @@ PurpleRobot.prototype.scheduleScript = function(name, minutes, script) {
 // Example
 //
 //     pr.setUserId("Bobbie");
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.setUserId = function(value) {
   return this._apiMethod("setUserId('" + value + "')");
 };
@@ -327,6 +387,8 @@ PurpleRobot.prototype.showApplicationLaunchNotification = function(title, messag
 //       buttonLabelB: "boo",
 //       scriptB: pr.emitToast("boo!")
 //     });
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.showNativeDialog = function(options) {
   return this._apiMethod("showNativeDialog('" + options.title + "', '" +
     options.message + "', '" + options.buttonLabelA + "', '" +
@@ -346,6 +408,8 @@ PurpleRobot.prototype.showNativeDialog = function(options) {
 //       isSticky: false,
 //       script: pr.emitToast("You pressed it")
 //     });
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.showScriptNotification = function(options) {
   options = options || {};
 
@@ -369,6 +433,8 @@ PurpleRobot.prototype.updateConfig = function(options) {
 //       startAt: "20140505T020304",
 //       endAt: "20140505T020404"
 //     });
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.updateTrigger = function(options) {
   options = options || {};
 
@@ -390,7 +456,15 @@ PurpleRobot.prototype.updateTrigger = function(options) {
 PurpleRobot.prototype.updateWidget = function(parameters) {
 };
 
+// Returns the current version string for Purple Robot.
+//
+// Example
+//
+//     pr.version();
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.version = function() {
+  return this._apiMethod("version()");
 };
 
 // Vibrates the phone with a preset pattern.
@@ -400,6 +474,8 @@ PurpleRobot.prototype.version = function() {
 //     pr.vibrate("buzz");
 //     pr.vibrate("blip");
 //     pr.vibrate("sos");
+//
+// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.vibrate = function(pattern) {
   pattern = pattern || "buzz";
 

@@ -10,7 +10,7 @@ sent as JSON, then deserialized and interpreted by Purple Robot.
 
 ### Installing
 
-`bower install git@github.com:cbitstech/PurpleRobotClient.git#1.5.2.2`
+`bower install git@github.com:cbitstech/PurpleRobotClient.git#1.5.2.3`
 
 ### Updating the documentation
 
@@ -27,4 +27,4 @@ open `spec/SpecRunner.html`
 #### Headless
 
 1. Install [PhantomJS](http://phantomjs.org/download.html)
-2. Run `phantomjs spec/run-jasmine.js spec/SpecRunner.html`
+2. Run `phantomjs spec/run-jasmine.js spec/SpecRunner.html` or `./run_specs`

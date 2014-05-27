@@ -58,6 +58,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.cancelScriptNotification();");
     });
 
+    it("#dateFromTimestamp", function() {
+      expect(pr.dateFromTimestamp(1401205124000).toString())
+        .toEqual("PurpleRobot.dateFromTimestamp(1401205124000);");
+    });
+
     it("#disableTrigger", function() {
       expect(pr.disableTrigger("MY-TRIGGER").toString())
         .toEqual("PurpleRobot.disableTrigger('MY-TRIGGER');");
@@ -116,6 +121,16 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.playDefaultTone();");
     });
 
+    it("#playTone", function() {
+      expect(pr.playTone('Hojus').toString())
+        .toEqual("PurpleRobot.playTone('Hojus');");
+    });
+
+    it("#readUrl", function() {
+      expect(pr.readUrl("http://www.northwestern.edu").toString())
+        .toEqual("PurpleRobot.readUrl('http://www.northwestern.edu');");
+    });
+
     it("#runScript", function() {
       expect(pr.runScript(pr.playDefaultTone()).toString())
         .toEqual("PurpleRobot.runScript(\"PurpleRobot.playDefaultTone();\");");
@@ -165,6 +180,10 @@ describe("PurpleRobot", function() {
       }).toString();
 
       expect(str).toEqual("PurpleRobot.updateTrigger('Z', {\"type\":\"datetime\",\"name\":\"Z\",\"identifier\":\"Z\",\"action\":\"PurpleRobot.emitToast('butter', true);\",\"datetime_start\":\"20140505T020304\",\"datetime_end\":\"20140505T020404\",\"datetime_repeat\":\"FREQ=DAILY;INTERVAL=1\"});");
+    });
+
+    it("#version", function() {
+      expect(pr.version().toString()).toEqual("PurpleRobot.version();");
     });
 
     it("#vibrate", function() {
