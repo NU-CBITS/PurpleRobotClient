@@ -1,6 +1,6 @@
 {
   "name": "PurpleRobotClient",
-  "version": "1.5.2.3",
+  "version": "1.5.2.4",
   "homepage": "https://github.com/cbitstech/PurpleRobotClient",
   "authors": [
     "Mark Begale <m-begale@northwestern.edu>",
@@ -8,6 +8,9 @@
   ],
   "description": "JavaScript client for Purple Robot services",
   "main": "purple-robot.js",
+  "devDependencies": {
+    "jasmine": "2"
+  },
   "ignore": [
     "README.md",
     "default-triggers.js",

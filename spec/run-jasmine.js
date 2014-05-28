@@ -61,14 +61,14 @@ page.open(system.args[1], function(status){
             var exitCode = page.evaluate(function(){
                 console.log('');
                 console.log(document.body.querySelector('.suite-detail').innerText);
-                var list = document.body.querySelectorAll('.results > #details > .specDetail.failed');
+                var list = document.body.querySelectorAll('.results .spec-detail.failed');
                 if (list && list.length > 0) {
                   console.log('');
                   console.log(list.length + ' test(s) FAILED:');
                   for (i = 0; i < list.length; ++i) {
                       var el = list[i],
                           desc = el.querySelector('.description'),
-                          msg = el.querySelector('.resultMessage.fail');
+                          msg = el.querySelector('.result-message');
                       console.log('');
                       console.log(desc.innerText);
                       console.log(msg.innerText);

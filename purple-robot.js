@@ -8,7 +8,7 @@ function PurpleRobot(options) {
 }
 
 // The version of the API, corresponding to the version of Purple Robot.
-PurpleRobot.apiVersion = "1.5.2.3";
+PurpleRobot.apiVersion = "1.5.2.4";
 
 // Enables chaining of method calls.
 PurpleRobot.prototype._apiMethod = function(nextScript) {
@@ -145,6 +145,7 @@ PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
 //
 //     pr.disableTrigger("MY-TRIGGER");
 //
+// `@param {string} id` The id of the trigger.
 // `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.disableTrigger = function(id) {
   return this._apiMethod("disableTrigger('" + id + "')");
@@ -156,8 +157,10 @@ PurpleRobot.prototype.disableTrigger = function(id) {
 //
 // Example
 //
-//     pr.emitReading("sandwich", "pb&j").execute();
+//     pr.emitReading("sandwich", "pb&j");
 //
+// `@param {string} name` The name of the reading.
+// `@param {any} value` The value of the reading.
 // `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.emitReading = function(name, value) {
   return this._apiMethod("emitReading('" + name + "', " + JSON.stringify(value) + ")");
@@ -169,6 +172,8 @@ PurpleRobot.prototype.emitReading = function(name, value) {
 //
 //     pr.emitToast("howdy", true);
 //
+// `@param {string} message` The text of the toast.
+// `@param {boolean} hasLongDuration` True if the toast should display longer.
 // `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.emitToast = function(message, hasLongDuration) {
   hasLongDuration = (typeof hasLongDuration === "boolean") ? hasLongDuration : true;

@@ -52,7 +52,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>PurpleRobot.apiVersion = <span class="hljs-string">"1.5.2.3"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>PurpleRobot.apiVersion = <span class="hljs-string">"1.5.2.4"</span>;</pre></div></div>
             
         </li>
         
@@ -308,7 +308,8 @@ making an HTTP request to the Purple Robot HTTP server.</p>
               <p>Disables the Purple Robot trigger identified by <em>id</em>;</p>
 <p>Example</p>
 <pre><code>pr.disableTrigger(<span class="hljs-string">"MY-TRIGGER"</span>);
-</code></pre><p><code>@returns {Object}</code> Returns a new object instance.</p>
+</code></pre><p><code>@param {string} id</code> The id of the trigger.
+<code>@returns {Object}</code> Returns a new object instance.</p>
 
             </div>
             
@@ -329,8 +330,10 @@ making an HTTP request to the Purple Robot HTTP server.</p>
 table name will be <em>name</em>, and the columns and data values will be
 extrapolated from the <em>value</em>.</p>
 <p>Example</p>
-<pre><code>pr.emitReading(<span class="hljs-string">"sandwich"</span>, <span class="hljs-string">"pb&amp;j"</span>).execute();
-</code></pre><p><code>@returns {Object}</code> Returns a new object instance.</p>
+<pre><code>pr.emitReading(<span class="hljs-string">"sandwich"</span>, <span class="hljs-string">"pb&amp;j"</span>);
+</code></pre><p><code>@param {string} name</code> The name of the reading.
+<code>@param {any} value</code> The value of the reading.
+<code>@returns {Object}</code> Returns a new object instance.</p>
 
             </div>
             
@@ -350,7 +353,9 @@ extrapolated from the <em>value</em>.</p>
               <p>Displays a native toast message on the phone.</p>
 <p>Example</p>
 <pre><code>pr.emitToast(<span class="hljs-string">"howdy"</span>, <span class="hljs-literal">true</span>);
-</code></pre><p><code>@returns {Object}</code> Returns a new object instance.</p>
+</code></pre><p><code>@param {string} message</code> The text of the toast.
+<code>@param {boolean} hasLongDuration</code> True if the toast should display longer.
+<code>@returns {Object}</code> Returns a new object instance.</p>
 
             </div>
             
