@@ -8,7 +8,7 @@ sent as JSON, then deserialized and interpreted by Purple Robot.
 
 ## Installing
 
-`bower install git@github.com:cbitstech/PurpleRobotClient.git#1.5.2`
+`bower install git@github.com:cbitstech/PurpleRobotClient.git#1.5.2.5`
 
 ## Updating the documentation
 

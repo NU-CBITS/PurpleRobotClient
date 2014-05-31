@@ -6,10 +6,6 @@ describe("PurpleRobot", function() {
     delete localStorage.prQueue;
   });
 
-  it("should be able to generate a string representation of a method", function() {
-    expect(pr.playDefaultTone().toString()).toEqual("PurpleRobot.playDefaultTone();");
-  });
-
   it("should be able to generate a string representation of chained methods", function() {
     var str = pr.emitReading("a", "1").playDefaultTone().toString();
     expect(str).toEqual("PurpleRobot.emitReading('a', \"1\"); PurpleRobot.playDefaultTone();");
@@ -25,6 +21,16 @@ describe("PurpleRobot", function() {
       scriptB: pr.emitToast("boo!")
     }).toString();
     expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\");");
+  });
+
+  it("should work for equality expressions", function () {
+    expect(pr.isEqual(pr.fetchEncryptedString("a"), null).toString())
+      .toEqual("(function() { return PurpleRobot.fetchEncryptedString('a'); })() == null");
+  });
+
+  it("should work for conditional statements", function() {
+    expect(pr.ifThenElse(pr.isEqual(1, 1), pr.playDefaultTone(), pr.vibrate()).toString())
+      .toEqual("if (1 == 1) { PurpleRobot.playDefaultTone(); } else { PurpleRobot.vibrate('buzz'); }");
   });
 
   describe("#save", function() {

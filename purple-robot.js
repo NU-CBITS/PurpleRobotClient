@@ -3,13 +3,28 @@
 function PurpleRobot(options) {
   options = options || {};
 
+  // __className__
+  //
+  // `@public`
+  this.className = "PurpleRobot";
+
+  // ___serverUrl__
+  //
+  // `@private`
   this._serverUrl = options.serverUrl || "http://localhost:12345/json/submit";
+  // ___script__
+  //
+  // `@private`
   this._script = options.script || "";
 }
 
 // The version of the API, corresponding to the version of Purple Robot.
-PurpleRobot.apiVersion = "1.5.2.4";
+PurpleRobot.apiVersion = "1.5.2.5";
 
+// ___apiMethod(nextScript)__
+//
+// `@returns {Object}` A new PurpleRobot instance.
+//
 // Enables chaining of method calls.
 PurpleRobot.prototype._apiMethod = function(nextScript) {
   return new PurpleRobot({
@@ -18,16 +33,62 @@ PurpleRobot.prototype._apiMethod = function(nextScript) {
   });
 };
 
-// Returns the string representation of the method call.
+// ___stringify(value)__
+//
+// `@private`  
+// `@param {any} value` The value to be stringified.  
+// `@returns {string}` The stringified representation.
+//
+// Returns a string representation of the input. If the input is a
+// `PurpleRobot` instance, a string expression is returned, otherwise a JSON
+// stringified version is returned.
+PurpleRobot.prototype._stringify = function(value) {
+  var str;
+
+  if (value !== null &&
+      typeof value === "object" &&
+      value.className === this.className) {
+    str = value.toStringExpression();
+  } else {
+    str = JSON.stringify(value);
+  }
+
+  return str;
+};
+
+// __toString()__
+//
+// `@returns {string}` The current script as a string.
+//
+// Returns the string representation of the current script.
 PurpleRobot.prototype.toString = function() {
   return this._script;
 };
 
+// __toStringExpression()__
+//
+// `@returns {string}` A string representation of a function that returns the
+// value of this script when evaluated.
+//
+// Example
+//
+//     pr.emitToast("foo").toStringExpression();
+//     // "(function() { return PurpleRobot.emitToast('foo'); })()"
+PurpleRobot.prototype.toStringExpression = function () {
+  return "(function() { return " + this._script + " })()";
+};
+
+// __toJson()__
+//
+// `@returns {string}` A JSON stringified version of this script.
+//
 // Returns the escaped string representation of the method call.
 PurpleRobot.prototype.toJson = function() {
   return JSON.stringify(this.toString());
 };
 
+// __execute(callbacks)__
+//
 // Executes the current method (and any previously chained methods) by
 // making an HTTP request to the Purple Robot HTTP server.
 //
@@ -105,6 +166,37 @@ PurpleRobot.prototype.destroy = function() {
   delete localStorage.prQueue;
 
   return this;
+};
+
+// Generates an equality expression between two values.
+//
+// Example
+//
+//     pr.isEqual(pr.fetchEncryptedString("a"), null);
+//
+// `@param {any} valA` The left hand value.
+// `@param {any} valB` The right hand value.
+// `@returns {Object}` Returns the current object instance.
+PurpleRobot.prototype.isEqual = function(valA, valB) {
+  var expr = this._stringify(valA) + " == " + this._stringify(valB);
+
+  return new PurpleRobot({
+    serverUrl: this._serverUrl,
+    script: [this._script, expr].join(" ").trim()
+  });
+};
+
+PurpleRobot.prototype.ifThenElse = function(condition, thenStmt, elseStmt) {
+  var expr = "if (" + condition.toString() + ") { " +
+    thenStmt.toString() +
+    " } else { " +
+    elseStmt.toString() +
+    " }";
+
+  return new PurpleRobot({
+    serverUrl: this._serverUrl,
+    script: [this._script, expr].join(" ").trim()
+  });
 };
 
 // ##Purple Robot API
