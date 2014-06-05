@@ -19,7 +19,7 @@ function PurpleRobot(options) {
 }
 
 // The version of the API, corresponding to the version of Purple Robot.
-PurpleRobot.apiVersion = "1.5.2.5";
+PurpleRobot.apiVersion = "1.5.4.0";
 
 // ___apiMethod(nextScript)__
 //
@@ -36,7 +36,7 @@ PurpleRobot.prototype._apiMethod = function(nextScript) {
 // ___stringify(value)__
 //
 // `@private`  
-// `@param {any} value` The value to be stringified.  
+// `@param {*} value` The value to be stringified.  
 // `@returns {string}` The stringified representation.
 //
 // Returns a string representation of the input. If the input is a
@@ -127,13 +127,15 @@ PurpleRobot.prototype.execute = function(callbacks) {
   httpRequest.send("json=" + json);
 };
 
+// __save()__
+//
+// `@returns {Object}` Returns the current object instance.
+//
 // Saves a string representation of script(s) to localStorage.
 //
 // Example
 // 
 //     pr.emitReading("foo", "bar").save();
-//
-// `@returns {Object}` Returns the current object instance.
 PurpleRobot.prototype.save = function() {
   localStorage.prQueue = localStorage.prQueue || "";
   localStorage.prQueue += this.toString();
@@ -141,13 +143,15 @@ PurpleRobot.prototype.save = function() {
   return this;
 };
 
+// __restore()__
+//
+// `@returns {Object}` Returns the current object instance.
+//
 // Restores saved script(s) from localStorage.
 //
 // Example
 //
 //     pr.restore().execute();
-//
-// `@returns {Object}` Returns the current object instance.
 PurpleRobot.prototype.restore = function() {
   localStorage.prQueue = localStorage.prQueue || "";
   this._script = localStorage.prQueue;
@@ -155,28 +159,32 @@ PurpleRobot.prototype.restore = function() {
   return this;
 };
 
+// __destroy()__
+//
+// `@returns {Object}` Returns the current object instance.
+//
 // Deletes saved script(s) from localStorage.
 //
 // Example
 //
 //     pr.destroy();
-//
-// `@returns {Object}` Returns the current object instance.
 PurpleRobot.prototype.destroy = function() {
   delete localStorage.prQueue;
 
   return this;
 };
 
+// __isEqual(valA, valB)__
+//
+// `@param {*} valA` The left hand value.  
+// `@param {*} valB` The right hand value.  
+// `@returns {Object}` Returns the current object instance.
+//
 // Generates an equality expression between two values.
 //
 // Example
 //
 //     pr.isEqual(pr.fetchEncryptedString("a"), null);
-//
-// `@param {any} valA` The left hand value.
-// `@param {any} valB` The right hand value.
-// `@returns {Object}` Returns the current object instance.
 PurpleRobot.prototype.isEqual = function(valA, valB) {
   var expr = this._stringify(valA) + " == " + this._stringify(valB);
 
@@ -186,6 +194,19 @@ PurpleRobot.prototype.isEqual = function(valA, valB) {
   });
 };
 
+// __ifThenElse(condition, thenStmt, elseStmt)__
+//
+// `@param {Object} condition` A PurpleRobot instance that evaluates to true or
+// false.  
+// `@param {Object} thenStmt` A PurpleRobot instance.  
+// `@param {Object} elseStmt` A PurpleRobot instance.  
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Generates a conditional expression.
+//
+// Example
+//
+//     pr.ifThenElse(pr.isEqual(1, 1), pr.emitToast("true"), pr.emitToast("error"));
 PurpleRobot.prototype.ifThenElse = function(condition, thenStmt, elseStmt) {
   var expr = "if (" + condition.toString() + ") { " +
     thenStmt.toString() +
@@ -205,7 +226,7 @@ PurpleRobot.prototype.ifThenElse = function(condition, thenStmt, elseStmt) {
 //
 // `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.broadcastIntent = function(action, options) {
-  return this._apiMethod("/* broadcastIntent NOT IMPLEMENTED YET */");
+  throw new Error("PurpleRobot.prototype.broadcastIntent not implemented yet");
 };
 
 // Removes the tray notification from the task bar.
@@ -225,7 +246,7 @@ PurpleRobot.prototype.cancelScriptNotification = function() {
 //
 //     pr.dateFromTimestamp(1401205124000);
 //
-// `@param {number} epoch` The Unix epoch timestamp including milliseconds.
+// `@param {number} epoch` The Unix epoch timestamp including milliseconds.  
 // `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
   return this._apiMethod("dateFromTimestamp(" + epoch + ")");
@@ -237,7 +258,7 @@ PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
 //
 //     pr.disableTrigger("MY-TRIGGER");
 //
-// `@param {string} id` The id of the trigger.
+// `@param {string} id` The id of the trigger.  
 // `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.disableTrigger = function(id) {
   return this._apiMethod("disableTrigger('" + id + "')");
@@ -251,8 +272,8 @@ PurpleRobot.prototype.disableTrigger = function(id) {
 //
 //     pr.emitReading("sandwich", "pb&j");
 //
-// `@param {string} name` The name of the reading.
-// `@param {any} value` The value of the reading.
+// `@param {string} name` The name of the reading.  
+// `@param {*} value` The value of the reading.  
 // `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.emitReading = function(name, value) {
   return this._apiMethod("emitReading('" + name + "', " + JSON.stringify(value) + ")");
@@ -264,8 +285,8 @@ PurpleRobot.prototype.emitReading = function(name, value) {
 //
 //     pr.emitToast("howdy", true);
 //
-// `@param {string} message` The text of the toast.
-// `@param {boolean} hasLongDuration` True if the toast should display longer.
+// `@param {string} message` The text of the toast.  
+// `@param {boolean} hasLongDuration` True if the toast should display longer.  
 // `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.emitToast = function(message, hasLongDuration) {
   hasLongDuration = (typeof hasLongDuration === "boolean") ? hasLongDuration : true;
@@ -295,21 +316,27 @@ PurpleRobot.prototype.fetchEncryptedString = function(key, namespace) {
 };
 
 PurpleRobot.prototype.fetchNamespace = function(namespace) {
+  throw new Error("PurpleRobot.prototype.fetchNamespace not implemented yet");
 };
 
 PurpleRobot.prototype.fetchNamespaces = function() {
+  throw new Error("PurpleRobot.prototype.fetchNamespaces not implemented yet");
 };
 
 PurpleRobot.prototype.fetchSnapshot = function(timestamp) {
+  throw new Error("PurpleRobot.prototype.fetchSnapshot not implemented yet");
 };
 
 PurpleRobot.prototype.fetchSnapshotIds = function() {
+  throw new Error("PurpleRobot.prototype.fetchSnapshotIds not implemented yet");
 };
 
 PurpleRobot.prototype.fetchTrigger = function(id) {
+  throw new Error("PurpleRobot.prototype.fetchTrigger not implemented yet");
 };
 
 PurpleRobot.prototype.fetchTriggerIds = function() {
+  throw new Error("PurpleRobot.prototype.fetchTriggerIds not implemented yet");
 };
 
 // Returns the Purple Robot configured user id string.
@@ -326,9 +353,11 @@ PurpleRobot.prototype.fetchUserId = function() {
 };
 
 PurpleRobot.prototype.fetchWidget = function(id) {
+  throw new Error("PurpleRobot.prototype.fetchWidget not implemented yet");
 };
 
 PurpleRobot.prototype.formatDate = function(date) {
+  throw new Error("PurpleRobot.prototype.formatDate not implemented yet");
 };
 
 // Launches the specified Android application as if the user had pressed
@@ -344,12 +373,23 @@ PurpleRobot.prototype.launchApplication = function(name) {
 };
 
 PurpleRobot.prototype.launchInternalUrl = function(url) {
+  throw new Error("PurpleRobot.prototype.launchInternalUrl not implemented yet");
 };
 
+// Opens a new browser tab and requests the URL.
+//
+// Example
+//
+//     pr.launchUrl("https://www.google.com");
+//
+// `@param {string} url` The URL to request.  
+// `@returns {Object}` A new object instance.
 PurpleRobot.prototype.launchUrl = function(url) {
+  return this._apiMethod("launchUrl('" + url + "')");
 };
 
 PurpleRobot.prototype.loadLibrary = function(name) {
+  throw new Error("PurpleRobot.prototype.loadLibrary not implemented yet");
 };
 
 // Logs an event to the PR event capturing service as well as the Android log.
@@ -358,21 +398,27 @@ PurpleRobot.prototype.loadLibrary = function(name) {
 //
 //     pr.log("zing", { wing: "ding" });
 //
+// `@param {string} name` The prefix to the log message.  
+// `@param {*} value` The contents of the log message.  
 // `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.log = function(name, value) {
   return this._apiMethod("log('" + name + "', " + JSON.stringify(value) + ")");
 };
 
 PurpleRobot.prototype.models = function() {
+  throw new Error("PurpleRobot.prototype.models not implemented yet");
 };
 
 PurpleRobot.prototype.now = function() {
+  throw new Error("PurpleRobot.prototype.now not implemented yet");
 };
 
 PurpleRobot.prototype.packageForApplicationName = function(applicationName) {
+  throw new Error("PurpleRobot.prototype.packageForApplicationName not implemented yet");
 };
 
 PurpleRobot.prototype.parseDate = function(dateString) {
+  throw new Error("PurpleRobot.prototype.parseDate not implemented yet");
 };
 
 // Stores the *value* within the *namespace*, identified by the *key*.
@@ -414,9 +460,11 @@ PurpleRobot.prototype.playTone = function(tone) {
 };
 
 PurpleRobot.prototype.predictions = function() {
+  throw new Error("PurpleRobot.prototype.predictions not implemented yet");
 };
 
 PurpleRobot.prototype.readings = function() {
+  throw new Error("PurpleRobot.prototype.readings not implemented yet");
 };
 
 // Attempts to GET a URL and return the body as a string.
@@ -469,6 +517,7 @@ PurpleRobot.prototype.setUserId = function(value) {
 };
 
 PurpleRobot.prototype.showApplicationLaunchNotification = function(title, message, applicationName, displayWhen, isPersistent, launchParameters, script) {
+  throw new Error("PurpleRobot.prototype.showApplicationLaunchNotification not implemented yet");
 };
 
 // Opens an Android dialog with two buttons, *A* and *B*, and associates
@@ -482,15 +531,29 @@ PurpleRobot.prototype.showApplicationLaunchNotification = function(title, messag
 //       buttonLabelA: "cheers",
 //       scriptA: pr.emitToast("cheers!"),
 //       buttonLabelB: "boo",
-//       scriptB: pr.emitToast("boo!")
+//       scriptB: pr.emitToast("boo!"),
+//       tag: "my-dialog",
+//       priority: 3
 //     });
 //
+// `@param {Object} options` Parameterized options for the dialog, including:
+// `{string} title` the dialog title, `{string} message` the body text,
+// `{string} buttonLabelA` the first button label, `{Object} scriptA` a
+// PurpleRobot instance to be run when button A is pressed, `{string}
+// buttonLabelB` the second button label, `{Object} scriptB` a PurpleRobot
+// instance to be run when button B is pressed, `{string} tag (optional)` an
+// id to be associated with the dialog, `{number} priority` an importance
+// associated with the dialog that informs stacking where higher means more
+// important.  
 // `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.showNativeDialog = function(options) {
+  var tag = options.tag || null;
+  var priority = options.priority || 0;
+
   return this._apiMethod("showNativeDialog('" + options.title + "', '" +
     options.message + "', '" + options.buttonLabelA + "', '" +
     options.buttonLabelB + "', " + options.scriptA.toJson() +
-    ", " + options.scriptB.toJson() + ")");
+    ", " + options.scriptB.toJson() + ", " + JSON.stringify(tag) + ", " + priority + ")");
 };
 
 // Adds a notification to the the tray and atttaches a script to be run when
@@ -516,6 +579,7 @@ PurpleRobot.prototype.showScriptNotification = function(options) {
 };
 
 PurpleRobot.prototype.updateConfig = function(options) {
+  throw new Error("PurpleRobot.prototype.updateConfig not implemented yet");
 };
 
 // Adds or updates a Purple Robot trigger to be run at a time and with a
@@ -551,6 +615,7 @@ PurpleRobot.prototype.updateTrigger = function(options) {
 };
 
 PurpleRobot.prototype.updateWidget = function(parameters) {
+  throw new Error("PurpleRobot.prototype.updateWidget not implemented yet");
 };
 
 // Returns the current version string for Purple Robot.
@@ -580,6 +645,7 @@ PurpleRobot.prototype.vibrate = function(pattern) {
 };
 
 PurpleRobot.prototype.widgets = function() {
+  throw new Error("PurpleRobot.prototype.widgets not implemented yet");
 };
 
 // ##Further examples

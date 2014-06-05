@@ -20,7 +20,7 @@ describe("PurpleRobot", function() {
       buttonLabelB: "boo",
       scriptB: pr.emitToast("boo!")
     }).toString();
-    expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\");");
+    expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\", null, 0);");
   });
 
   it("should work for equality expressions", function () {
@@ -110,6 +110,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.launchApplication('foo.bar');");
     });
 
+    it("#launchUrl", function() {
+      expect(pr.launchUrl("https://www.google.com").toString())
+        .toEqual("PurpleRobot.launchUrl('https://www.google.com');");
+    });
+
     it("#log", function() {
       expect(pr.log("wing", { zing: "ding" }).toString())
         .toEqual("PurpleRobot.log('wing', {\"zing\":\"ding\"});");
@@ -159,10 +164,12 @@ describe("PurpleRobot", function() {
         buttonLabelA: "cheers",
         scriptA: pr.emitToast("cheers!"),
         buttonLabelB: "boo",
-        scriptB: pr.emitToast("boo!")
+        scriptB: pr.emitToast("boo!"),
+        tag: "my-dialog",
+        priority: 3
       }).toString();
 
-      expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\");");
+      expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\", \"my-dialog\", 3);");
     });
 
     it("#showScriptNotification", function() {
