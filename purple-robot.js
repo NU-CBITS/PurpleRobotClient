@@ -19,7 +19,7 @@ function PurpleRobot(options) {
 }
 
 // The version of the API, corresponding to the version of Purple Robot.
-PurpleRobot.apiVersion = "1.5.4.0";
+PurpleRobot.apiVersion = "1.5.4.1";
 
 // ___apiMethod(nextScript)__
 //
@@ -217,6 +217,22 @@ PurpleRobot.prototype.ifThenElse = function(condition, thenStmt, elseStmt) {
   return new PurpleRobot({
     serverUrl: this._serverUrl,
     script: [this._script, expr].join(" ").trim()
+  });
+};
+
+// __doNothing()__
+//
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Generates an explicitly empty script.
+//
+// Example
+//
+//     pr.doNothing();
+PurpleRobot.prototype.doNothing = function() {
+  return new PurpleRobot({
+    serverUrl: this._serverUrl,
+    script: this._script
   });
 };
 
