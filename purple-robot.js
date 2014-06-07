@@ -1,5 +1,12 @@
+// ## Example
+//
+//     var pr = new PurpleRobot();
+//     pr.playDefaultTone().execute();
+
+// __constructor__
+//
 // Initialize the client with an options object made up of
-//   serverUrl - the url to which commands are sent
+// `serverUrl` - the url to which commands are sent
 function PurpleRobot(options) {
   options = options || {};
 
@@ -18,18 +25,62 @@ function PurpleRobot(options) {
   this._script = options.script || "";
 }
 
+function PurpleRobotArgumentException(methodName, argument, expectedArgument) {
+  this.methodName = methodName;
+  this.argument = argument;
+  this.expectedArgument = expectedArgument;
+  this.message = ' received an unexpected argument "';
+
+  this.toString = function() {
+    return [
+      "PurpleRobot.",
+      this.methodName,
+      this.message,
+      this.argument,
+      '" expected: ',
+      this.expectedArgument
+    ].join("");
+  };
+};
+
+// __apiVersion__
+//
+// `@public`
+//
 // The version of the API, corresponding to the version of Purple Robot.
 PurpleRobot.apiVersion = "1.5.4.0";
 
-// ___apiMethod(nextScript)__
+// __setEnvironment()__
 //
+// `@public`  
+// `@param {string} ['production'|'debug'|'web']`
+//
+// Set the environment to one of:  
+// `production`: Make real calls to the Purple Robot HTTP server with minimal
+// logging.  
+// `debug': Make real calls to the Purple Robot HTTP server with extra
+// logging.  
+// `web`: Make fake calls to the Purple Robot HTTP server with extra logging.
+PurpleRobot.setEnvironment = function(env) {
+  if (env !== 'production' && env !== 'debug' && env !== 'web') {
+    throw new PurpleRobotArgumentException('setEnvironment', env, '["production", "debug", "web"]');
+  }
+
+  this.env = env;
+};
+
+// ___push(nextScript)__
+//
+// `@private`  
 // `@returns {Object}` A new PurpleRobot instance.
 //
 // Enables chaining of method calls.
-PurpleRobot.prototype._apiMethod = function(nextScript) {
+PurpleRobot.prototype._push = function(methodName, argStr) {
+  var nextScript = ["PurpleRobot.", methodName, "(", argStr, ");"].join("");
+
   return new PurpleRobot({
     serverUrl: this._serverUrl,
-    script: [this._script, "PurpleRobot." + nextScript + ";"].join(" ").trim()
+    script: [this._script, nextScript].join(" ").trim()
   });
 };
 
@@ -121,10 +172,14 @@ PurpleRobot.prototype.execute = function(callbacks) {
     }
   }
 
-  httpRequest.onreadystatechange = onChange;
-  httpRequest.open("POST", this._serverUrl, isAsynchronous);
-  httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  httpRequest.send("json=" + json);
+  if (PurpleRobot.env !== 'web') {
+    httpRequest.onreadystatechange = onChange;
+    httpRequest.open("POST", this._serverUrl, isAsynchronous);
+    httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpRequest.send("json=" + json);
+  } else {
+    console.log('PurpleRobot POSTing to "' + this._serverUrl + '": ' + json);
+  }
 };
 
 // __save()__
@@ -222,48 +277,62 @@ PurpleRobot.prototype.ifThenElse = function(condition, thenStmt, elseStmt) {
 
 // ##Purple Robot API
 
-// Broadcasts an Android intent.
+// __broadcastIntent(action, options)__
 //
-// `@returns {Object}` Returns a new object instance.
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
+// Broadcasts an Android intent.
 PurpleRobot.prototype.broadcastIntent = function(action, options) {
   throw new Error("PurpleRobot.prototype.broadcastIntent not implemented yet");
 };
 
+// __cancelScriptNotification()__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Removes the tray notification from the task bar.
 //
 // Example
 //
 //     pr.cancelScriptNotification();
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.cancelScriptNotification = function() {
-  return this._apiMethod("cancelScriptNotification()");
+  return this._push("cancelScriptNotification");
 };
 
+// __dateFromTimestamp(epoch)__
+//
+// `@param {number} epoch` The Unix epoch timestamp including milliseconds.  
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Returns a Date object given an epoch timestamp.
 //
 // Example
 //
 //     pr.dateFromTimestamp(1401205124000);
-//
-// `@param {number} epoch` The Unix epoch timestamp including milliseconds.  
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
-  return this._apiMethod("dateFromTimestamp(" + epoch + ")");
+  return this._push("dateFromTimestamp", epoch);
 };
 
+// __disableTrigger(id)__
+//
+// `@param {string} id` The id of the trigger.  
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Disables the Purple Robot trigger identified by *id*;
 //
 // Example
 //
 //     pr.disableTrigger("MY-TRIGGER");
-//
-// `@param {string} id` The id of the trigger.  
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.disableTrigger = function(id) {
-  return this._apiMethod("disableTrigger('" + id + "')");
+  return this._push("disableTrigger", "'" + id + "'");
 };
 
+// __emitReading(name, value)__
+//
+// `@param {string} name` The name of the reading.  
+// `@param {*} value` The value of the reading.  
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Transmits a name value pair to be stored in Purple Robot Warehouse. The
 // table name will be *name*, and the columns and data values will be
 // extrapolated from the *value*.
@@ -271,33 +340,37 @@ PurpleRobot.prototype.disableTrigger = function(id) {
 // Example
 //
 //     pr.emitReading("sandwich", "pb&j");
-//
-// `@param {string} name` The name of the reading.  
-// `@param {*} value` The value of the reading.  
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.emitReading = function(name, value) {
-  return this._apiMethod("emitReading('" + name + "', " + JSON.stringify(value) + ")");
+  return this._push("emitReading", "'" + name + "', " + JSON.stringify(value));
 };
 
+// __emitToast(message, hasLongDuration)__
+//
+// `@param {string} message` The text of the toast.  
+// `@param {boolean} hasLongDuration` True if the toast should display longer.  
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Displays a native toast message on the phone.
 //
 // Example
 //
 //     pr.emitToast("howdy", true);
-//
-// `@param {string} message` The text of the toast.  
-// `@param {boolean} hasLongDuration` True if the toast should display longer.  
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.emitToast = function(message, hasLongDuration) {
   hasLongDuration = (typeof hasLongDuration === "boolean") ? hasLongDuration : true;
 
-  return this._apiMethod("emitToast('" + message + "', " + hasLongDuration + ")");
+  return this._push("emitToast", "'" + message + "', " + hasLongDuration);
 };
 
+// __fetchConfig()__
 PurpleRobot.prototype.fetchConfig = function() {
-  return this._apiMethod("fetchConfig()");
+  return this._push("fetchConfig");
 };
 
+// __fetchEncryptedString(key, namespace)__  
+// __fetchEncryptedString(key)__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Returns a value stored for the namespace and key provided. Generally
 // paired with `persistEncryptedString`.
 //
@@ -305,40 +378,48 @@ PurpleRobot.prototype.fetchConfig = function() {
 //
 //     pr.fetchEncryptedString("x", "my stuff");
 //     pr.fetchEncryptedString("y");
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.fetchEncryptedString = function(key, namespace) {
   if (typeof namespace === "undefined") {
-    return this._apiMethod("fetchEncryptedString('" + key + "')");
+    return this._push("fetchEncryptedString", "'" + key + "'");
   } else {
-    return this._apiMethod("fetchEncryptedString('" + namespace + "', '" + key + "')");
+    return this._push("fetchEncryptedString", "'" + namespace + "', '" + key + "'");
   }
 };
 
+// __fetchNamespace(namespace)__
 PurpleRobot.prototype.fetchNamespace = function(namespace) {
   throw new Error("PurpleRobot.prototype.fetchNamespace not implemented yet");
 };
 
+// __fetchNamespaces()__
 PurpleRobot.prototype.fetchNamespaces = function() {
   throw new Error("PurpleRobot.prototype.fetchNamespaces not implemented yet");
 };
 
+// __fetchSnapshot(timestamp)__
 PurpleRobot.prototype.fetchSnapshot = function(timestamp) {
   throw new Error("PurpleRobot.prototype.fetchSnapshot not implemented yet");
 };
 
+// __fetchSnapshotIds()__
 PurpleRobot.prototype.fetchSnapshotIds = function() {
   throw new Error("PurpleRobot.prototype.fetchSnapshotIds not implemented yet");
 };
 
+// __fetchTrigger(id)__
 PurpleRobot.prototype.fetchTrigger = function(id) {
   throw new Error("PurpleRobot.prototype.fetchTrigger not implemented yet");
 };
 
+// __fetchTriggerIds()__
 PurpleRobot.prototype.fetchTriggerIds = function() {
   throw new Error("PurpleRobot.prototype.fetchTriggerIds not implemented yet");
 };
 
+// __fetchUserId()__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Returns the Purple Robot configured user id string.
 //
 // Example
@@ -346,180 +427,222 @@ PurpleRobot.prototype.fetchTriggerIds = function() {
 //     pr.fetchUserId().execute().done(function(userId) {
 //       console.log(userId);
 //     });
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.fetchUserId = function() {
-  return this._apiMethod("fetchUserId()");
+  return this._push("fetchUserId");
 };
 
+// __fetchWidget()__
 PurpleRobot.prototype.fetchWidget = function(id) {
   throw new Error("PurpleRobot.prototype.fetchWidget not implemented yet");
 };
 
+// __formatDate(date)__
 PurpleRobot.prototype.formatDate = function(date) {
   throw new Error("PurpleRobot.prototype.formatDate not implemented yet");
 };
 
+// __launchApplication(name)__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Launches the specified Android application as if the user had pressed
 // the icon.
 //
 // Example
 //
 //     pr.launchApplication("edu.northwestern.cbits.awesome_app");
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.launchApplication = function(name) {
-  return this._apiMethod("launchApplication('" + name + "')");
+  return this._push("launchApplication", "'" + name + "'");
 };
 
+// __launchInternalUrl(url)__
 PurpleRobot.prototype.launchInternalUrl = function(url) {
   throw new Error("PurpleRobot.prototype.launchInternalUrl not implemented yet");
 };
 
+// __launchUrl(url)__
+//
+// `@param {string} url` The URL to request.  
+// `@returns {Object}` A new object instance.
+//
 // Opens a new browser tab and requests the URL.
 //
 // Example
 //
 //     pr.launchUrl("https://www.google.com");
-//
-// `@param {string} url` The URL to request.  
-// `@returns {Object}` A new object instance.
 PurpleRobot.prototype.launchUrl = function(url) {
-  return this._apiMethod("launchUrl('" + url + "')");
+  return this._push("launchUrl", "'" + url + "'");
 };
 
+// __loadLibrary(name)__
 PurpleRobot.prototype.loadLibrary = function(name) {
   throw new Error("PurpleRobot.prototype.loadLibrary not implemented yet");
 };
 
+// __log(name, value)__
+//
+// `@param {string} name` The prefix to the log message.  
+// `@param {*} value` The contents of the log message.  
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Logs an event to the PR event capturing service as well as the Android log.
 //
 // Example
 //
 //     pr.log("zing", { wing: "ding" });
-//
-// `@param {string} name` The prefix to the log message.  
-// `@param {*} value` The contents of the log message.  
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.log = function(name, value) {
-  return this._apiMethod("log('" + name + "', " + JSON.stringify(value) + ")");
+  return this._push("log", "'" + name + "', " + JSON.stringify(value));
 };
 
+// __models()__
 PurpleRobot.prototype.models = function() {
   throw new Error("PurpleRobot.prototype.models not implemented yet");
 };
 
+// __now()__
 PurpleRobot.prototype.now = function() {
   throw new Error("PurpleRobot.prototype.now not implemented yet");
 };
 
+// __packageForApplicationName(applicationName)__
 PurpleRobot.prototype.packageForApplicationName = function(applicationName) {
   throw new Error("PurpleRobot.prototype.packageForApplicationName not implemented yet");
 };
 
+// __parseDate(dateString)__
 PurpleRobot.prototype.parseDate = function(dateString) {
   throw new Error("PurpleRobot.prototype.parseDate not implemented yet");
 };
 
+// __persistEncryptedString(key, value, namespace)__  
+// __persistEncryptedString(key, value)__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Stores the *value* within the *namespace*, identified by the *key*.
 //
 // Examples
 //
 //     pr.persistEncryptedString("foo", "bar", "app Q");
 //     pr.persistEncryptedString("foo", "bar");
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.persistEncryptedString = function(key, value, namespace) {
   if (typeof namespace === "undefined") {
-    return this._apiMethod("persistEncryptedString('" + key + "', '" + value + "')");
+    return this._push("persistEncryptedString", "'" + key + "', '" + value + "'");
   } else {
-    return this._apiMethod("persistEncryptedString('" + namespace + "', '" + key + "', '" + value + "')");
+    return this._push("persistEncryptedString", "'" + namespace + "', '" + key + "', '" + value + "'");
   }
 };
 
+// __playDefaultTone()__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Plays a default Android notification sound.
 //
 // Example
 //
 //     pr.playDefaultTone();
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.playDefaultTone = function() {
-  return this._apiMethod("playDefaultTone()");
+  return this._push("playDefaultTone");
 };
 
+// __playTone(tone)__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Plays an existing notification sound on an Android phone.
 //
 // Example
 //
 //     pr.playTone("Hojus");
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.playTone = function(tone) {
-  return this._apiMethod("playTone('" + tone + "')");
+  return this._push("playTone", "'" + tone + "'");
 };
 
+// __predictions()__
 PurpleRobot.prototype.predictions = function() {
   throw new Error("PurpleRobot.prototype.predictions not implemented yet");
 };
 
+// __readings()__
 PurpleRobot.prototype.readings = function() {
   throw new Error("PurpleRobot.prototype.readings not implemented yet");
 };
 
+// __readUrl(url)__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Attempts to GET a URL and return the body as a string.
 //
 // Example
 //
 //     pr.readUrl("http://www.northwestern.edu");
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.readUrl = function(url) {
-  return this._apiMethod("readUrl('" + url + "')");
+  return this._push("readUrl", "'" + url + "'");
 };
 
-// Runs a script immediately.
+// __runScript(script)__
 //
-// @param script a PurpleRobot instance
+// `@param {Object} script` A PurpleRobot instance.  
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
+// Runs a script immediately.
 //
 // Example
 //
 //     pr.runScript(pr.emitToast("toasty"));
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.runScript = function(script) {
-  return this._apiMethod("runScript(" + script.toJson() + ")");
+  return this._push("runScript", script.toJson());
 };
 
+// __scheduleScript(name, minutes, script)__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Schedules a script to run a specified number of minutes in the future
 // (calculated from when this script is evaluated).
 //
 // Example
 //
 //     pr.scheduleScript("fancy script", 5, pr.playDefaultTone());
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.scheduleScript = function(name, minutes, script) {
   var timestampStr = "(function() { var now = new Date(); var scheduled = new Date(now.getTime() + " + minutes + " * 60000); var pad = function(n) { return n < 10 ? '0' + n : n; }; return '' + scheduled.getFullYear() + pad(scheduled.getMonth() + 1) + pad(scheduled.getDate()) + 'T' + pad(scheduled.getHours()) + pad(scheduled.getMinutes()) + pad(scheduled.getSeconds()); })()";
 
-  return this._apiMethod("scheduleScript('" + name + "', " + timestampStr + ", " + script.toJson() + ")");
+  return this._push("scheduleScript", "'" + name + "', " + timestampStr + ", " + script.toJson());
 };
 
+// __setUserId(value)__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Sets the Purple Robot user id string.
 //
 // Example
 //
 //     pr.setUserId("Bobbie");
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.setUserId = function(value) {
-  return this._apiMethod("setUserId('" + value + "')");
+  return this._push("setUserId", "'" + value + "'");
 };
 
-PurpleRobot.prototype.showApplicationLaunchNotification = function(title, message, applicationName, displayWhen, isPersistent, launchParameters, script) {
+// __showApplicationLaunchNotification(options)__
+PurpleRobot.prototype.showApplicationLaunchNotification = function(options) {
   throw new Error("PurpleRobot.prototype.showApplicationLaunchNotification not implemented yet");
 };
 
+// __showNativeDialog(options)__
+//
+// `@param {Object} options` Parameterized options for the dialog, including:
+// `{string} title` the dialog title, `{string} message` the body text,
+// `{string} buttonLabelA` the first button label, `{Object} scriptA` a
+// PurpleRobot instance to be run when button A is pressed, `{string}
+// buttonLabelB` the second button label, `{Object} scriptB` a PurpleRobot
+// instance to be run when button B is pressed, `{string} tag (optional)` an
+// id to be associated with the dialog, `{number} priority` an importance
+// associated with the dialog that informs stacking where higher means more
+// important.  
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Opens an Android dialog with two buttons, *A* and *B*, and associates
 // scripts to be run when each is pressed.
 //
@@ -535,27 +658,20 @@ PurpleRobot.prototype.showApplicationLaunchNotification = function(title, messag
 //       tag: "my-dialog",
 //       priority: 3
 //     });
-//
-// `@param {Object} options` Parameterized options for the dialog, including:
-// `{string} title` the dialog title, `{string} message` the body text,
-// `{string} buttonLabelA` the first button label, `{Object} scriptA` a
-// PurpleRobot instance to be run when button A is pressed, `{string}
-// buttonLabelB` the second button label, `{Object} scriptB` a PurpleRobot
-// instance to be run when button B is pressed, `{string} tag (optional)` an
-// id to be associated with the dialog, `{number} priority` an importance
-// associated with the dialog that informs stacking where higher means more
-// important.  
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.showNativeDialog = function(options) {
   var tag = options.tag || null;
   var priority = options.priority || 0;
 
-  return this._apiMethod("showNativeDialog('" + options.title + "', '" +
+  return this._push("showNativeDialog", "'" + options.title + "', '" +
     options.message + "', '" + options.buttonLabelA + "', '" +
     options.buttonLabelB + "', " + options.scriptA.toJson() +
-    ", " + options.scriptB.toJson() + ", " + JSON.stringify(tag) + ", " + priority + ")");
+    ", " + options.scriptB.toJson() + ", " + JSON.stringify(tag) + ", " + priority);
 };
 
+// __showScriptNotification(options)__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Adds a notification to the the tray and atttaches a script to be run when
 // it is pressed.
 //
@@ -568,20 +684,23 @@ PurpleRobot.prototype.showNativeDialog = function(options) {
 //       isSticky: false,
 //       script: pr.emitToast("You pressed it")
 //     });
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.showScriptNotification = function(options) {
   options = options || {};
 
-  return this._apiMethod("showScriptNotification('" + options.title + "', '" +
+  return this._push("showScriptNotification", "'" + options.title + "', '" +
     options.message + "', " + options.isPersistent + ", " + options.isSticky +
-    ", " + options.script.toJson() + ")");
+    ", " + options.script.toJson());
 };
 
+// __updateConfig(options)__
 PurpleRobot.prototype.updateConfig = function(options) {
   throw new Error("PurpleRobot.prototype.updateConfig not implemented yet");
 };
 
+// __updateTrigger(options)__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Adds or updates a Purple Robot trigger to be run at a time and with a
 // recurrence rule.
 //
@@ -594,8 +713,6 @@ PurpleRobot.prototype.updateConfig = function(options) {
 //       startAt: "20140505T020304",
 //       endAt: "20140505T020404"
 //     });
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.updateTrigger = function(options) {
   options = options || {};
 
@@ -611,24 +728,30 @@ PurpleRobot.prototype.updateTrigger = function(options) {
     datetime_repeat: options.repeatRule || "FREQ=DAILY;INTERVAL=1"
   });
 
-  return this._apiMethod("updateTrigger('" + triggerId + "', " + triggerJson + ")");
+  return this._push("updateTrigger", "'" + triggerId + "', " + triggerJson);
 };
 
 PurpleRobot.prototype.updateWidget = function(parameters) {
   throw new Error("PurpleRobot.prototype.updateWidget not implemented yet");
 };
 
+// __version()__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Returns the current version string for Purple Robot.
 //
 // Example
 //
 //     pr.version();
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.version = function() {
-  return this._apiMethod("version()");
+  return this._push("version");
 };
 
+// __vibrate(pattern)__
+//
+// `@returns {Object}` Returns a new PurpleRobot instance.
+//
 // Vibrates the phone with a preset pattern.
 //
 // Examples
@@ -636,19 +759,18 @@ PurpleRobot.prototype.version = function() {
 //     pr.vibrate("buzz");
 //     pr.vibrate("blip");
 //     pr.vibrate("sos");
-//
-// `@returns {Object}` Returns a new object instance.
 PurpleRobot.prototype.vibrate = function(pattern) {
   pattern = pattern || "buzz";
 
-  return this._apiMethod("vibrate('" + pattern + "')");
+  return this._push("vibrate", "'" + pattern + "'");
 };
 
+// __widgets()__
 PurpleRobot.prototype.widgets = function() {
   throw new Error("PurpleRobot.prototype.widgets not implemented yet");
 };
 
-// ##Further examples
+// ## More complex examples
 //
 // Example of nesting
 //
