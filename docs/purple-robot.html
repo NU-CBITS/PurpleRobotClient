@@ -133,7 +133,7 @@ pr.playDefaultTone().execute();
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>PurpleRobot.apiVersion = <span class="hljs-string">"1.5.4.0"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>PurpleRobot.apiVersion = <span class="hljs-string">"1.5.4.1"</span>;</pre></div></div>
             
         </li>
         
@@ -465,9 +465,20 @@ false.<br><code>@param {Object} thenStmt</code> A PurpleRobot instance.<br><code
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <h2 id="purple-robot-api">Purple Robot API</h2>
-
+              <p><strong>doNothing()</strong></p>
+<p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
+<p>Generates an explicitly empty script.</p>
+<p>Example</p>
+<pre><code>pr.doNothing();
+</code></pre>
             </div>
+            
+            <div class="content"><div class='highlight'><pre>PurpleRobot.prototype.doNothing = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> PurpleRobot({
+    serverUrl: <span class="hljs-keyword">this</span>._serverUrl,
+    script: <span class="hljs-keyword">this</span>._script
+  });
+};</pre></div></div>
             
         </li>
         
@@ -477,6 +488,19 @@ false.<br><code>@param {Object} thenStmt</code> A PurpleRobot instance.<br><code
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h2 id="purple-robot-api">Purple Robot API</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p><strong>broadcastIntent(action, options)</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -491,11 +515,11 @@ false.<br><code>@param {Object} thenStmt</code> A PurpleRobot instance.<br><code
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><strong>cancelScriptNotification()</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -512,11 +536,11 @@ false.<br><code>@param {Object} thenStmt</code> A PurpleRobot instance.<br><code
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p><strong>clearNativeDialogs()</strong><br><strong>clearNativeDialogs(tag)</strong></p>
 <p><code>@param {string} tag (optional)</code> An identifier of a specific dialog.

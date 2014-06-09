@@ -33,6 +33,12 @@ describe("PurpleRobot", function() {
       .toEqual("if (1 == 1) { PurpleRobot.playDefaultTone(); } else { PurpleRobot.vibrate('buzz'); }");
   });
 
+  describe("#doNothing", function() {
+    it("should generate a script that does nothing additional", function() {
+      expect(pr.doNothing().toString()).toEqual("");
+    });
+  });
+
   describe("#save", function() {
     it("should save a string representation in localStorage", function() {
       expect(pr.emitReading("foo", "bar").save().toString())
