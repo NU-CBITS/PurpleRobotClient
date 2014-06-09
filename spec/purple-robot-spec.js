@@ -64,6 +64,13 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.cancelScriptNotification();");
     });
 
+    it("#clearNativeDialogs", function() {
+      expect(pr.clearNativeDialogs().toString())
+        .toEqual("PurpleRobot.clearNativeDialogs();");
+      expect(pr.clearNativeDialogs("my-id").toString())
+        .toEqual("PurpleRobot.clearNativeDialogs('my-id');");
+    });
+
     it("#dateFromTimestamp", function() {
       expect(pr.dateFromTimestamp(1401205124000).toString())
         .toEqual("PurpleRobot.dateFromTimestamp(1401205124000);");

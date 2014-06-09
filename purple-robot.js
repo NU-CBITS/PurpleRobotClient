@@ -279,7 +279,7 @@ PurpleRobot.prototype.ifThenElse = function(condition, thenStmt, elseStmt) {
 
 // __broadcastIntent(action, options)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Broadcasts an Android intent.
 PurpleRobot.prototype.broadcastIntent = function(action, options) {
@@ -288,7 +288,7 @@ PurpleRobot.prototype.broadcastIntent = function(action, options) {
 
 // __cancelScriptNotification()__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Removes the tray notification from the task bar.
 //
@@ -299,10 +299,30 @@ PurpleRobot.prototype.cancelScriptNotification = function() {
   return this._push("cancelScriptNotification");
 };
 
+// __clearNativeDialogs()__  
+// __clearNativeDialogs(tag)__
+//
+// `@param {string} tag (optional)` An identifier of a specific dialog.
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Removes all native dialogs from the screen.
+//
+// Examples
+//
+//     pr.clearNativeDialogs();
+//     pr.clearNativeDialogs("my-id");
+PurpleRobot.prototype.clearNativeDialogs = function(tag) {
+  if (tag) {
+    return this._push("clearNativeDialogs", "'" + tag + "'");
+  } else {
+    return this._push("clearNativeDialogs");
+  }
+};
+
 // __dateFromTimestamp(epoch)__
 //
 // `@param {number} epoch` The Unix epoch timestamp including milliseconds.  
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Returns a Date object given an epoch timestamp.
 //
@@ -316,7 +336,7 @@ PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
 // __disableTrigger(id)__
 //
 // `@param {string} id` The id of the trigger.  
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Disables the Purple Robot trigger identified by *id*;
 //
@@ -331,7 +351,7 @@ PurpleRobot.prototype.disableTrigger = function(id) {
 //
 // `@param {string} name` The name of the reading.  
 // `@param {*} value` The value of the reading.  
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Transmits a name value pair to be stored in Purple Robot Warehouse. The
 // table name will be *name*, and the columns and data values will be
@@ -348,7 +368,7 @@ PurpleRobot.prototype.emitReading = function(name, value) {
 //
 // `@param {string} message` The text of the toast.  
 // `@param {boolean} hasLongDuration` True if the toast should display longer.  
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Displays a native toast message on the phone.
 //
@@ -369,7 +389,7 @@ PurpleRobot.prototype.fetchConfig = function() {
 // __fetchEncryptedString(key, namespace)__  
 // __fetchEncryptedString(key)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Returns a value stored for the namespace and key provided. Generally
 // paired with `persistEncryptedString`.
@@ -418,7 +438,7 @@ PurpleRobot.prototype.fetchTriggerIds = function() {
 
 // __fetchUserId()__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Returns the Purple Robot configured user id string.
 //
@@ -443,7 +463,7 @@ PurpleRobot.prototype.formatDate = function(date) {
 
 // __launchApplication(name)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Launches the specified Android application as if the user had pressed
 // the icon.
@@ -483,7 +503,7 @@ PurpleRobot.prototype.loadLibrary = function(name) {
 //
 // `@param {string} name` The prefix to the log message.  
 // `@param {*} value` The contents of the log message.  
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Logs an event to the PR event capturing service as well as the Android log.
 //
@@ -517,7 +537,7 @@ PurpleRobot.prototype.parseDate = function(dateString) {
 // __persistEncryptedString(key, value, namespace)__  
 // __persistEncryptedString(key, value)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Stores the *value* within the *namespace*, identified by the *key*.
 //
@@ -535,7 +555,7 @@ PurpleRobot.prototype.persistEncryptedString = function(key, value, namespace) {
 
 // __playDefaultTone()__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Plays a default Android notification sound.
 //
@@ -548,7 +568,7 @@ PurpleRobot.prototype.playDefaultTone = function() {
 
 // __playTone(tone)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Plays an existing notification sound on an Android phone.
 //
@@ -571,7 +591,7 @@ PurpleRobot.prototype.readings = function() {
 
 // __readUrl(url)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Attempts to GET a URL and return the body as a string.
 //
@@ -585,7 +605,7 @@ PurpleRobot.prototype.readUrl = function(url) {
 // __runScript(script)__
 //
 // `@param {Object} script` A PurpleRobot instance.  
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Runs a script immediately.
 //
@@ -598,7 +618,7 @@ PurpleRobot.prototype.runScript = function(script) {
 
 // __scheduleScript(name, minutes, script)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Schedules a script to run a specified number of minutes in the future
 // (calculated from when this script is evaluated).
@@ -614,7 +634,7 @@ PurpleRobot.prototype.scheduleScript = function(name, minutes, script) {
 
 // __setUserId(value)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Sets the Purple Robot user id string.
 //
@@ -641,7 +661,7 @@ PurpleRobot.prototype.showApplicationLaunchNotification = function(options) {
 // id to be associated with the dialog, `{number} priority` an importance
 // associated with the dialog that informs stacking where higher means more
 // important.  
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Opens an Android dialog with two buttons, *A* and *B*, and associates
 // scripts to be run when each is pressed.
@@ -670,7 +690,7 @@ PurpleRobot.prototype.showNativeDialog = function(options) {
 
 // __showScriptNotification(options)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Adds a notification to the the tray and atttaches a script to be run when
 // it is pressed.
@@ -699,7 +719,7 @@ PurpleRobot.prototype.updateConfig = function(options) {
 
 // __updateTrigger(options)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Adds or updates a Purple Robot trigger to be run at a time and with a
 // recurrence rule.
@@ -737,7 +757,7 @@ PurpleRobot.prototype.updateWidget = function(parameters) {
 
 // __version()__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Returns the current version string for Purple Robot.
 //
@@ -750,7 +770,7 @@ PurpleRobot.prototype.version = function() {
 
 // __vibrate(pattern)__
 //
-// `@returns {Object}` Returns a new PurpleRobot instance.
+// `@returns {Object}` A new PurpleRobot instance.
 //
 // Vibrates the phone with a preset pattern.
 //
