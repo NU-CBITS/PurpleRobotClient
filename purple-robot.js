@@ -25,6 +25,8 @@ function PurpleRobot(options) {
   this._script = options.script || "";
 }
 
+var PR = PurpleRobot;
+
 function PurpleRobotArgumentException(methodName, argument, expectedArgument) {
   this.methodName = methodName;
   this.argument = argument;
@@ -48,7 +50,7 @@ function PurpleRobotArgumentException(methodName, argument, expectedArgument) {
 // `@public`
 //
 // The version of the API, corresponding to the version of Purple Robot.
-PurpleRobot.apiVersion = "1.5.4.1";
+PR.apiVersion = "1.5.4.2";
 
 // __setEnvironment()__
 //
@@ -61,12 +63,14 @@ PurpleRobot.apiVersion = "1.5.4.1";
 // `debug': Make real calls to the Purple Robot HTTP server with extra
 // logging.  
 // `web`: Make fake calls to the Purple Robot HTTP server with extra logging.
-PurpleRobot.setEnvironment = function(env) {
+PR.setEnvironment = function(env) {
   if (env !== 'production' && env !== 'debug' && env !== 'web') {
     throw new PurpleRobotArgumentException('setEnvironment', env, '["production", "debug", "web"]');
   }
 
   this.env = env;
+
+  return this;
 };
 
 // ___push(nextScript)__
@@ -75,10 +79,10 @@ PurpleRobot.setEnvironment = function(env) {
 // `@returns {Object}` A new PurpleRobot instance.
 //
 // Enables chaining of method calls.
-PurpleRobot.prototype._push = function(methodName, argStr) {
+PR.prototype._push = function(methodName, argStr) {
   var nextScript = ["PurpleRobot.", methodName, "(", argStr, ");"].join("");
 
-  return new PurpleRobot({
+  return new PR({
     serverUrl: this._serverUrl,
     script: [this._script, nextScript].join(" ").trim()
   });
@@ -93,7 +97,7 @@ PurpleRobot.prototype._push = function(methodName, argStr) {
 // Returns a string representation of the input. If the input is a
 // `PurpleRobot` instance, a string expression is returned, otherwise a JSON
 // stringified version is returned.
-PurpleRobot.prototype._stringify = function(value) {
+PR.prototype._stringify = function(value) {
   var str;
 
   if (value !== null &&
@@ -112,7 +116,7 @@ PurpleRobot.prototype._stringify = function(value) {
 // `@returns {string}` The current script as a string.
 //
 // Returns the string representation of the current script.
-PurpleRobot.prototype.toString = function() {
+PR.prototype.toString = function() {
   return this._script;
 };
 
@@ -125,7 +129,7 @@ PurpleRobot.prototype.toString = function() {
 //
 //     pr.emitToast("foo").toStringExpression();
 //     // "(function() { return PurpleRobot.emitToast('foo'); })()"
-PurpleRobot.prototype.toStringExpression = function () {
+PR.prototype.toStringExpression = function () {
   return "(function() { return " + this._script + " })()";
 };
 
@@ -134,7 +138,7 @@ PurpleRobot.prototype.toStringExpression = function () {
 // `@returns {string}` A JSON stringified version of this script.
 //
 // Returns the escaped string representation of the method call.
-PurpleRobot.prototype.toJson = function() {
+PR.prototype.toJson = function() {
   return JSON.stringify(this.toString());
 };
 
@@ -150,30 +154,26 @@ PurpleRobot.prototype.toJson = function() {
 //               console.log(payload);
 //             }
 //     })
-PurpleRobot.prototype.execute = function(callbacks) {
-  callbacks = callbacks || {};
-  callbacks.done = callbacks.done || function() {};
-  callbacks.fail = callbacks.fail || function() {};
-
-  var httpRequest = new XMLHttpRequest();
-  var isAsynchronous = true;
+PR.prototype.execute = function(callbacks) {
   var json = JSON.stringify({
     command: "execute_script",
     script: this.toString()
   });
 
-  function onChange() {
-    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-      if (httpRequest.response === null) {
-        callbacks.fail();
-      } else {
-        callbacks.done(JSON.parse(httpRequest.response).payload);
+  if (PR.env !== 'web') {
+    function onChange() {
+      if (callbacks && httpRequest.readyState === XMLHttpRequest.DONE) {
+        if (httpRequest.response === null) {
+          callbacks.fail && callbacks.fail();
+        } else if (callbacks.done) {
+          callbacks.done(JSON.parse(httpRequest.response).payload);
+        }
       }
     }
-  }
 
-  if (PurpleRobot.env !== 'web') {
+    var httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = onChange;
+    var isAsynchronous = true;
     httpRequest.open("POST", this._serverUrl, isAsynchronous);
     httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     httpRequest.send("json=" + json);
@@ -191,7 +191,7 @@ PurpleRobot.prototype.execute = function(callbacks) {
 // Example
 // 
 //     pr.emitReading("foo", "bar").save();
-PurpleRobot.prototype.save = function() {
+PR.prototype.save = function() {
   localStorage.prQueue = localStorage.prQueue || "";
   localStorage.prQueue += this.toString();
 
@@ -207,7 +207,7 @@ PurpleRobot.prototype.save = function() {
 // Example
 //
 //     pr.restore().execute();
-PurpleRobot.prototype.restore = function() {
+PR.prototype.restore = function() {
   localStorage.prQueue = localStorage.prQueue || "";
   this._script = localStorage.prQueue;
 
@@ -223,7 +223,7 @@ PurpleRobot.prototype.restore = function() {
 // Example
 //
 //     pr.destroy();
-PurpleRobot.prototype.destroy = function() {
+PR.prototype.destroy = function() {
   delete localStorage.prQueue;
 
   return this;
@@ -240,10 +240,10 @@ PurpleRobot.prototype.destroy = function() {
 // Example
 //
 //     pr.isEqual(pr.fetchEncryptedString("a"), null);
-PurpleRobot.prototype.isEqual = function(valA, valB) {
+PR.prototype.isEqual = function(valA, valB) {
   var expr = this._stringify(valA) + " == " + this._stringify(valB);
 
-  return new PurpleRobot({
+  return new PR({
     serverUrl: this._serverUrl,
     script: [this._script, expr].join(" ").trim()
   });
@@ -262,14 +262,14 @@ PurpleRobot.prototype.isEqual = function(valA, valB) {
 // Example
 //
 //     pr.ifThenElse(pr.isEqual(1, 1), pr.emitToast("true"), pr.emitToast("error"));
-PurpleRobot.prototype.ifThenElse = function(condition, thenStmt, elseStmt) {
+PR.prototype.ifThenElse = function(condition, thenStmt, elseStmt) {
   var expr = "if (" + condition.toString() + ") { " +
     thenStmt.toString() +
     " } else { " +
     elseStmt.toString() +
     " }";
 
-  return new PurpleRobot({
+  return new PR({
     serverUrl: this._serverUrl,
     script: [this._script, expr].join(" ").trim()
   });
@@ -284,22 +284,49 @@ PurpleRobot.prototype.ifThenElse = function(condition, thenStmt, elseStmt) {
 // Example
 //
 //     pr.doNothing();
-PurpleRobot.prototype.doNothing = function() {
-  return new PurpleRobot({
+PR.prototype.doNothing = function() {
+  return new PR({
     serverUrl: this._serverUrl,
     script: this._script
   });
 };
 
+// ___q(value)__
+//
+// `@private`  
+// `@param {string} value` A string argument.  
+// `@returns {string}` A string with extra single quotes surrounding it.
+PR.prototype._q = function(value) {
+  return "'" + value + "'";
+};
+
 // ##Purple Robot API
+
+// __addNamespace(namespace)__
+//
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Adds a namespace under which unencrypted values might be stored.
+//
+// Example
+//
+//     pr.addNamespace("foo");
+PR.prototype.addNamespace = function(namespace) {
+  return this._push("addNamespace", [this._q(namespace)].join(", "));
+};
 
 // __broadcastIntent(action, options)__
 //
 // `@returns {Object}` A new PurpleRobot instance.
 //
 // Broadcasts an Android intent.
-PurpleRobot.prototype.broadcastIntent = function(action, options) {
-  throw new Error("PurpleRobot.prototype.broadcastIntent not implemented yet");
+//
+// Example
+//
+//     pr.broadcastIntent("intent");
+PR.prototype.broadcastIntent = function(action, options) {
+  return this._push("broadcastIntent", [this._q(action),
+    JSON.stringify(options || null)].join(", "));
 };
 
 // __cancelScriptNotification()__
@@ -311,7 +338,7 @@ PurpleRobot.prototype.broadcastIntent = function(action, options) {
 // Example
 //
 //     pr.cancelScriptNotification();
-PurpleRobot.prototype.cancelScriptNotification = function() {
+PR.prototype.cancelScriptNotification = function() {
   return this._push("cancelScriptNotification");
 };
 
@@ -327,9 +354,9 @@ PurpleRobot.prototype.cancelScriptNotification = function() {
 //
 //     pr.clearNativeDialogs();
 //     pr.clearNativeDialogs("my-id");
-PurpleRobot.prototype.clearNativeDialogs = function(tag) {
+PR.prototype.clearNativeDialogs = function(tag) {
   if (tag) {
-    return this._push("clearNativeDialogs", "'" + tag + "'");
+    return this._push("clearNativeDialogs", this._q(tag));
   } else {
     return this._push("clearNativeDialogs");
   }
@@ -345,7 +372,7 @@ PurpleRobot.prototype.clearNativeDialogs = function(tag) {
 // Example
 //
 //     pr.dateFromTimestamp(1401205124000);
-PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
+PR.prototype.dateFromTimestamp = function(epoch) {
   return this._push("dateFromTimestamp", epoch);
 };
 
@@ -359,8 +386,8 @@ PurpleRobot.prototype.dateFromTimestamp = function(epoch) {
 // Example
 //
 //     pr.disableTrigger("MY-TRIGGER");
-PurpleRobot.prototype.disableTrigger = function(id) {
-  return this._push("disableTrigger", "'" + id + "'");
+PR.prototype.disableTrigger = function(id) {
+  return this._push("disableTrigger", this._q(id));
 };
 
 // __emitReading(name, value)__
@@ -376,8 +403,8 @@ PurpleRobot.prototype.disableTrigger = function(id) {
 // Example
 //
 //     pr.emitReading("sandwich", "pb&j");
-PurpleRobot.prototype.emitReading = function(name, value) {
-  return this._push("emitReading", "'" + name + "', " + JSON.stringify(value));
+PR.prototype.emitReading = function(name, value) {
+  return this._push("emitReading", this._q(name) + ", " + JSON.stringify(value));
 };
 
 // __emitToast(message, hasLongDuration)__
@@ -391,14 +418,14 @@ PurpleRobot.prototype.emitReading = function(name, value) {
 // Example
 //
 //     pr.emitToast("howdy", true);
-PurpleRobot.prototype.emitToast = function(message, hasLongDuration) {
+PR.prototype.emitToast = function(message, hasLongDuration) {
   hasLongDuration = (typeof hasLongDuration === "boolean") ? hasLongDuration : true;
 
-  return this._push("emitToast", "'" + message + "', " + hasLongDuration);
+  return this._push("emitToast", this._q(message) + ", " + hasLongDuration);
 };
 
 // __fetchConfig()__
-PurpleRobot.prototype.fetchConfig = function() {
+PR.prototype.fetchConfig = function() {
   return this._push("fetchConfig");
 };
 
@@ -414,42 +441,92 @@ PurpleRobot.prototype.fetchConfig = function() {
 //
 //     pr.fetchEncryptedString("x", "my stuff");
 //     pr.fetchEncryptedString("y");
-PurpleRobot.prototype.fetchEncryptedString = function(key, namespace) {
+PR.prototype.fetchEncryptedString = function(key, namespace) {
   if (typeof namespace === "undefined") {
-    return this._push("fetchEncryptedString", "'" + key + "'");
+    return this._push("fetchEncryptedString", this._q(key));
   } else {
-    return this._push("fetchEncryptedString", "'" + namespace + "', '" + key + "'");
+    return this._push("fetchEncryptedString", this._q(namespace) + ", " + this._q(key));
   }
 };
 
 // __fetchNamespace(namespace)__
-PurpleRobot.prototype.fetchNamespace = function(namespace) {
-  throw new Error("PurpleRobot.prototype.fetchNamespace not implemented yet");
+//
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Returns a hash of the keys and values stored in the namespace.
+//
+// Examples
+//
+//     pr.fetchNamespace("x").execute({
+//       done(function(store) {
+//         ...
+//       });
+PR.prototype.fetchNamespace = function(namespace) {
+  return this._push("fetchNamespace", [this._q(namespace)].join(", "));
 };
 
 // __fetchNamespaces()__
-PurpleRobot.prototype.fetchNamespaces = function() {
-  throw new Error("PurpleRobot.prototype.fetchNamespaces not implemented yet");
+//
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Returns an array of all the namespaces
+//
+// Examples
+//
+//     pr.fetchNamespaces.execute({
+//       done(function(namespaces) {
+//         ...
+//       });
+PR.prototype.fetchNamespaces = function() {
+  return this._push("fetchNamespaces");
 };
 
 // __fetchSnapshot(timestamp)__
-PurpleRobot.prototype.fetchSnapshot = function(timestamp) {
+PR.prototype.fetchSnapshot = function(timestamp) {
   throw new Error("PurpleRobot.prototype.fetchSnapshot not implemented yet");
 };
 
 // __fetchSnapshotIds()__
-PurpleRobot.prototype.fetchSnapshotIds = function() {
-  throw new Error("PurpleRobot.prototype.fetchSnapshotIds not implemented yet");
+//
+// Example
+//
+//     pr.fetchSnapshotIds().execute({
+//       done: function(ids) {
+//         ...
+//       }
+//     });
+PR.prototype.fetchSnapshotIds = function() {
+  return this._push("fetchSnapshotIds");
 };
 
 // __fetchTrigger(id)__
-PurpleRobot.prototype.fetchTrigger = function(id) {
-  throw new Error("PurpleRobot.prototype.fetchTrigger not implemented yet");
+//
+// Example
+//
+//     pr.fetchTrigger("my-trigger").execute({
+//       done: function(triggerConfig) {
+//         ...
+//       }
+//     });
+PR.prototype.fetchTrigger = function(id) {
+  return this._push("fetchTrigger", [this._q(id)].join(", "));
 };
 
 // __fetchTriggerIds()__
-PurpleRobot.prototype.fetchTriggerIds = function() {
-  throw new Error("PurpleRobot.prototype.fetchTriggerIds not implemented yet");
+//
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Returns an array of Trigger id strings.
+//
+// Example
+//
+//     pr.fetchTriggerIds().execute({
+//       done: function(ids) {
+//         ...
+//       }
+//     });
+PR.prototype.fetchTriggerIds = function() {
+  return this._push("fetchTriggerIds");
 };
 
 // __fetchUserId()__
@@ -463,17 +540,17 @@ PurpleRobot.prototype.fetchTriggerIds = function() {
 //     pr.fetchUserId().execute().done(function(userId) {
 //       console.log(userId);
 //     });
-PurpleRobot.prototype.fetchUserId = function() {
+PR.prototype.fetchUserId = function() {
   return this._push("fetchUserId");
 };
 
 // __fetchWidget()__
-PurpleRobot.prototype.fetchWidget = function(id) {
+PR.prototype.fetchWidget = function(id) {
   throw new Error("PurpleRobot.prototype.fetchWidget not implemented yet");
 };
 
 // __formatDate(date)__
-PurpleRobot.prototype.formatDate = function(date) {
+PR.prototype.formatDate = function(date) {
   throw new Error("PurpleRobot.prototype.formatDate not implemented yet");
 };
 
@@ -487,13 +564,21 @@ PurpleRobot.prototype.formatDate = function(date) {
 // Example
 //
 //     pr.launchApplication("edu.northwestern.cbits.awesome_app");
-PurpleRobot.prototype.launchApplication = function(name) {
-  return this._push("launchApplication", "'" + name + "'");
+PR.prototype.launchApplication = function(name) {
+  return this._push("launchApplication", this._q(name));
 };
 
 // __launchInternalUrl(url)__
-PurpleRobot.prototype.launchInternalUrl = function(url) {
-  throw new Error("PurpleRobot.prototype.launchInternalUrl not implemented yet");
+//
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Launches a URL within the Purple Robot application WebView.
+//
+// Example
+//
+//     pr.launchInternalUrl("https://www.google.com");
+PR.prototype.launchInternalUrl = function(url) {
+  return this._push("launchInternalUrl", [this._q(url)].join(", "));
 };
 
 // __launchUrl(url)__
@@ -506,12 +591,12 @@ PurpleRobot.prototype.launchInternalUrl = function(url) {
 // Example
 //
 //     pr.launchUrl("https://www.google.com");
-PurpleRobot.prototype.launchUrl = function(url) {
-  return this._push("launchUrl", "'" + url + "'");
+PR.prototype.launchUrl = function(url) {
+  return this._push("launchUrl", this._q(url));
 };
 
 // __loadLibrary(name)__
-PurpleRobot.prototype.loadLibrary = function(name) {
+PR.prototype.loadLibrary = function(name) {
   throw new Error("PurpleRobot.prototype.loadLibrary not implemented yet");
 };
 
@@ -526,27 +611,51 @@ PurpleRobot.prototype.loadLibrary = function(name) {
 // Example
 //
 //     pr.log("zing", { wing: "ding" });
-PurpleRobot.prototype.log = function(name, value) {
-  return this._push("log", "'" + name + "', " + JSON.stringify(value));
+PR.prototype.log = function(name, value) {
+  return this._push("log", this._q(name) + ", " + JSON.stringify(value));
 };
 
 // __models()__
-PurpleRobot.prototype.models = function() {
+PR.prototype.models = function() {
   throw new Error("PurpleRobot.prototype.models not implemented yet");
 };
 
 // __now()__
-PurpleRobot.prototype.now = function() {
-  throw new Error("PurpleRobot.prototype.now not implemented yet");
+//
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Calculates a string representing the current date.
+//
+// Example
+//
+//     pr.now().execute({
+//       done: function(dateStr) {
+//         ...
+//       }
+//     });
+PR.prototype.now = function() {
+  return this._push("now");
 };
 
 // __packageForApplicationName(applicationName)__
-PurpleRobot.prototype.packageForApplicationName = function(applicationName) {
-  throw new Error("PurpleRobot.prototype.packageForApplicationName not implemented yet");
+//
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Returns the package name string for the application.
+//
+// Example
+//
+//     pr.packageForApplicationName("edu.northwestern.cbits.purple_robot_manager").execute({
+//       done: function(package) {
+//         ...
+//       }
+//     });
+PR.prototype.packageForApplicationName = function(applicationName) {
+  return this._push("packageForApplicationName", [this._q(applicationName)].join(", "));
 };
 
 // __parseDate(dateString)__
-PurpleRobot.prototype.parseDate = function(dateString) {
+PR.prototype.parseDate = function(dateString) {
   throw new Error("PurpleRobot.prototype.parseDate not implemented yet");
 };
 
@@ -561,11 +670,11 @@ PurpleRobot.prototype.parseDate = function(dateString) {
 //
 //     pr.persistEncryptedString("foo", "bar", "app Q");
 //     pr.persistEncryptedString("foo", "bar");
-PurpleRobot.prototype.persistEncryptedString = function(key, value, namespace) {
+PR.prototype.persistEncryptedString = function(key, value, namespace) {
   if (typeof namespace === "undefined") {
-    return this._push("persistEncryptedString", "'" + key + "', '" + value + "'");
+    return this._push("persistEncryptedString", this._q(key) + ", " + this._q(value));
   } else {
-    return this._push("persistEncryptedString", "'" + namespace + "', '" + key + "', '" + value + "'");
+    return this._push("persistEncryptedString", this._q(namespace) + ", " + this._q(key) + ", " + this._q(value));
   }
 };
 
@@ -578,7 +687,7 @@ PurpleRobot.prototype.persistEncryptedString = function(key, value, namespace) {
 // Example
 //
 //     pr.playDefaultTone();
-PurpleRobot.prototype.playDefaultTone = function() {
+PR.prototype.playDefaultTone = function() {
   return this._push("playDefaultTone");
 };
 
@@ -591,17 +700,17 @@ PurpleRobot.prototype.playDefaultTone = function() {
 // Example
 //
 //     pr.playTone("Hojus");
-PurpleRobot.prototype.playTone = function(tone) {
-  return this._push("playTone", "'" + tone + "'");
+PR.prototype.playTone = function(tone) {
+  return this._push("playTone", this._q(tone));
 };
 
 // __predictions()__
-PurpleRobot.prototype.predictions = function() {
+PR.prototype.predictions = function() {
   throw new Error("PurpleRobot.prototype.predictions not implemented yet");
 };
 
 // __readings()__
-PurpleRobot.prototype.readings = function() {
+PR.prototype.readings = function() {
   throw new Error("PurpleRobot.prototype.readings not implemented yet");
 };
 
@@ -614,8 +723,8 @@ PurpleRobot.prototype.readings = function() {
 // Example
 //
 //     pr.readUrl("http://www.northwestern.edu");
-PurpleRobot.prototype.readUrl = function(url) {
-  return this._push("readUrl", "'" + url + "'");
+PR.prototype.readUrl = function(url) {
+  return this._push("readUrl", this._q(url));
 };
 
 // __runScript(script)__
@@ -628,7 +737,7 @@ PurpleRobot.prototype.readUrl = function(url) {
 // Example
 //
 //     pr.runScript(pr.emitToast("toasty"));
-PurpleRobot.prototype.runScript = function(script) {
+PR.prototype.runScript = function(script) {
   return this._push("runScript", script.toJson());
 };
 
@@ -642,10 +751,10 @@ PurpleRobot.prototype.runScript = function(script) {
 // Example
 //
 //     pr.scheduleScript("fancy script", 5, pr.playDefaultTone());
-PurpleRobot.prototype.scheduleScript = function(name, minutes, script) {
+PR.prototype.scheduleScript = function(name, minutes, script) {
   var timestampStr = "(function() { var now = new Date(); var scheduled = new Date(now.getTime() + " + minutes + " * 60000); var pad = function(n) { return n < 10 ? '0' + n : n; }; return '' + scheduled.getFullYear() + pad(scheduled.getMonth() + 1) + pad(scheduled.getDate()) + 'T' + pad(scheduled.getHours()) + pad(scheduled.getMinutes()) + pad(scheduled.getSeconds()); })()";
 
-  return this._push("scheduleScript", "'" + name + "', " + timestampStr + ", " + script.toJson());
+  return this._push("scheduleScript", this._q(name) + ", " + timestampStr + ", " + script.toJson());
 };
 
 // __setUserId(value)__
@@ -657,12 +766,12 @@ PurpleRobot.prototype.scheduleScript = function(name, minutes, script) {
 // Example
 //
 //     pr.setUserId("Bobbie");
-PurpleRobot.prototype.setUserId = function(value) {
-  return this._push("setUserId", "'" + value + "'");
+PR.prototype.setUserId = function(value) {
+  return this._push("setUserId", this._q(value));
 };
 
 // __showApplicationLaunchNotification(options)__
-PurpleRobot.prototype.showApplicationLaunchNotification = function(options) {
+PR.prototype.showApplicationLaunchNotification = function(options) {
   throw new Error("PurpleRobot.prototype.showApplicationLaunchNotification not implemented yet");
 };
 
@@ -694,14 +803,14 @@ PurpleRobot.prototype.showApplicationLaunchNotification = function(options) {
 //       tag: "my-dialog",
 //       priority: 3
 //     });
-PurpleRobot.prototype.showNativeDialog = function(options) {
+PR.prototype.showNativeDialog = function(options) {
   var tag = options.tag || null;
   var priority = options.priority || 0;
 
-  return this._push("showNativeDialog", "'" + options.title + "', '" +
-    options.message + "', '" + options.buttonLabelA + "', '" +
-    options.buttonLabelB + "', " + options.scriptA.toJson() +
-    ", " + options.scriptB.toJson() + ", " + JSON.stringify(tag) + ", " + priority);
+  return this._push("showNativeDialog", [this._q(options.title),
+    this._q(options.message), this._q(options.buttonLabelA),
+    this._q(options.buttonLabelB), options.scriptA.toJson(),
+    options.scriptB.toJson(), JSON.stringify(tag), priority].join(", "));
 };
 
 // __showScriptNotification(options)__
@@ -720,17 +829,36 @@ PurpleRobot.prototype.showNativeDialog = function(options) {
 //       isSticky: false,
 //       script: pr.emitToast("You pressed it")
 //     });
-PurpleRobot.prototype.showScriptNotification = function(options) {
+PR.prototype.showScriptNotification = function(options) {
   options = options || {};
 
-  return this._push("showScriptNotification", "'" + options.title + "', '" +
-    options.message + "', " + options.isPersistent + ", " + options.isSticky +
-    ", " + options.script.toJson());
+  return this._push("showScriptNotification", [this._q(options.title),
+    this._q(options.message), options.isPersistent, options.isSticky,
+    options.script.toJson()].join(", "));
 };
 
 // __updateConfig(options)__
-PurpleRobot.prototype.updateConfig = function(options) {
-  throw new Error("PurpleRobot.prototype.updateConfig not implemented yet");
+//
+// `@param {Object} options` The options to configure. Included:
+// `config_data_server_uri`  
+// `config_enable_data_server`  
+// `config_feature_weather_underground_enabled`  
+// `config_http_liberal_ssl`  
+// `config_last_weather_underground_check`  
+// `config_probe_running_software_enabled`  
+// `config_probe_running_software_frequency`  
+// `config_probes_enabled`  
+// `config_restrict_data_wifi`  
+// `@returns {Object}` A new PurpleRobot instance.
+//
+// Example
+//
+//     pr.updateConfig({
+//       config_enable_data_server: true,
+//       config_restrict_data_wifi: false
+//     });
+PR.prototype.updateConfig = function(options) {
+  return this._push("updateConfig", [JSON.stringify(options)].join(", "));
 };
 
 // __updateTrigger(options)__
@@ -749,7 +877,7 @@ PurpleRobot.prototype.updateConfig = function(options) {
 //       startAt: "20140505T020304",
 //       endAt: "20140505T020404"
 //     });
-PurpleRobot.prototype.updateTrigger = function(options) {
+PR.prototype.updateTrigger = function(options) {
   options = options || {};
 
   var timestamp = (new Date()).getTime();
@@ -764,10 +892,11 @@ PurpleRobot.prototype.updateTrigger = function(options) {
     datetime_repeat: options.repeatRule || "FREQ=DAILY;INTERVAL=1"
   });
 
-  return this._push("updateTrigger", "'" + triggerId + "', " + triggerJson);
+  return this._push("updateTrigger", this._q(triggerId) + ", " + triggerJson);
 };
 
-PurpleRobot.prototype.updateWidget = function(parameters) {
+// __updateWidget(parameters)__
+PR.prototype.updateWidget = function(parameters) {
   throw new Error("PurpleRobot.prototype.updateWidget not implemented yet");
 };
 
@@ -780,7 +909,7 @@ PurpleRobot.prototype.updateWidget = function(parameters) {
 // Example
 //
 //     pr.version();
-PurpleRobot.prototype.version = function() {
+PR.prototype.version = function() {
   return this._push("version");
 };
 
@@ -795,14 +924,14 @@ PurpleRobot.prototype.version = function() {
 //     pr.vibrate("buzz");
 //     pr.vibrate("blip");
 //     pr.vibrate("sos");
-PurpleRobot.prototype.vibrate = function(pattern) {
+PR.prototype.vibrate = function(pattern) {
   pattern = pattern || "buzz";
 
-  return this._push("vibrate", "'" + pattern + "'");
+  return this._push("vibrate", this._q(pattern));
 };
 
 // __widgets()__
-PurpleRobot.prototype.widgets = function() {
+PR.prototype.widgets = function() {
   throw new Error("PurpleRobot.prototype.widgets not implemented yet");
 };
 

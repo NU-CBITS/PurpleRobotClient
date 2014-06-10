@@ -23,14 +23,50 @@ describe("PurpleRobot", function() {
     expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\", null, 0);");
   });
 
-  it("should work for equality expressions", function () {
-    expect(pr.isEqual(pr.fetchEncryptedString("a"), null).toString())
-      .toEqual("(function() { return PurpleRobot.fetchEncryptedString('a'); })() == null");
+  describe(".setEnvironment", function() {
+    it("should raise an exception given unrecognized environments", function() {
+      expect(function() { PurpleRobot.setEnvironment("blurg") }).toThrow();
+    });
+
+    it("should set the environment if recognized", function() {
+      expect(PurpleRobot.setEnvironment("production").env).toEqual("production");
+    });
   });
 
-  it("should work for conditional statements", function() {
-    expect(pr.ifThenElse(pr.isEqual(1, 1), pr.playDefaultTone(), pr.vibrate()).toString())
-      .toEqual("if (1 == 1) { PurpleRobot.playDefaultTone(); } else { PurpleRobot.vibrate('buzz'); }");
+  describe("#execute", function() {
+    var mockXHR = jasmine.createSpyObj("mockXHR", ["open", "setRequestHeader",
+      "send"]);
+
+    beforeEach(function() {
+      spyOn(window, "XMLHttpRequest").and.returnValue(mockXHR);
+    });
+
+    it("should not make an HTTP request in web environment", function() {
+      PurpleRobot.setEnvironment("web");
+      pr.execute();
+      expect(mockXHR.send).not.toHaveBeenCalled();
+    });
+
+    it("should make an HTTP request in production environment", function() {
+      PurpleRobot.setEnvironment("production");
+      pr.execute();
+      expect(mockXHR.send)
+        .toHaveBeenCalledWith('json={"command":"execute_script","script":""}');
+    });
+  });
+
+  describe("#isEqual", function() {
+    it("should generate an equality expression", function () {
+      expect(pr.isEqual(pr.fetchEncryptedString("a"), null).toString())
+        .toEqual("(function() { return PurpleRobot.fetchEncryptedString('a'); })() == null");
+    });
+  });
+
+  describe("#ifThenElse", function() {
+    it("should generate a conditional statement", function() {
+      expect(pr.ifThenElse(pr.isEqual(1, 1), pr.playDefaultTone(), pr.vibrate()).toString())
+        .toEqual("if (1 == 1) { PurpleRobot.playDefaultTone(); } else { PurpleRobot.vibrate('buzz'); }");
+    });
   });
 
   describe("#doNothing", function() {
@@ -65,6 +101,16 @@ describe("PurpleRobot", function() {
   });
 
   describe("should implement API methods", function() {
+    it("#addNamespace", function() {
+      expect(pr.addNamespace("foo").toString())
+        .toEqual("PurpleRobot.addNamespace('foo');");
+    });
+
+    it("#broadcastIntent", function() {
+      expect(pr.broadcastIntent("foo", { bar: "baz" }).toString())
+        .toEqual("PurpleRobot.broadcastIntent('foo', {\"bar\":\"baz\"});");
+    });
+
     it("#cancelScriptNotification", function() {
       expect(pr.cancelScriptNotification().toString())
         .toEqual("PurpleRobot.cancelScriptNotification();");
@@ -113,6 +159,31 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.fetchEncryptedString('key');");
     });
 
+    it("#fetchNamespace", function() {
+      expect(pr.fetchNamespace("x").toString())
+        .toEqual("PurpleRobot.fetchNamespace('x');");
+    });
+
+    it("#fetchNamespaces", function() {
+      expect(pr.fetchNamespaces().toString())
+        .toEqual("PurpleRobot.fetchNamespaces();");
+    });
+
+    it("#fetchSnapshotIds", function() {
+      expect(pr.fetchSnapshotIds().toString())
+        .toEqual("PurpleRobot.fetchSnapshotIds();");
+    });
+
+    it("#fetchTrigger", function() {
+      expect(pr.fetchTrigger("x").toString())
+        .toEqual("PurpleRobot.fetchTrigger('x');");
+    });
+
+    it("#fetchTriggerIds", function() {
+      expect(pr.fetchTriggerIds().toString())
+        .toEqual("PurpleRobot.fetchTriggerIds();");
+    });
+
     it("#fetchUserId", function() {
       expect(pr.fetchUserId().toString())
         .toEqual("PurpleRobot.fetchUserId();");
@@ -123,6 +194,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.launchApplication('foo.bar');");
     });
 
+    it("#launchInternalUrl", function() {
+      expect(pr.launchInternalUrl("https://www.google.com").toString())
+        .toEqual("PurpleRobot.launchInternalUrl('https://www.google.com');");
+    });
+
     it("#launchUrl", function() {
       expect(pr.launchUrl("https://www.google.com").toString())
         .toEqual("PurpleRobot.launchUrl('https://www.google.com');");
@@ -131,6 +207,16 @@ describe("PurpleRobot", function() {
     it("#log", function() {
       expect(pr.log("wing", { zing: "ding" }).toString())
         .toEqual("PurpleRobot.log('wing', {\"zing\":\"ding\"});");
+    });
+
+    it("#now", function() {
+      expect(pr.now().toString())
+        .toEqual("PurpleRobot.now();");
+    });
+
+    it("#packageForApplicationName", function() {
+      expect(pr.packageForApplicationName("asdf").toString())
+        .toEqual("PurpleRobot.packageForApplicationName('asdf');");
     });
 
     it("#persistEncryptedString", function() {
