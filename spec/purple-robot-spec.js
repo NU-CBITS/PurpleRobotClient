@@ -123,9 +123,19 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.clearNativeDialogs('my-id');");
     });
 
+    it("#clearTriggers", function() {
+      expect(pr.clearTriggers().toString())
+        .toEqual("PurpleRobot.clearTriggers();");
+    });
+
     it("#dateFromTimestamp", function() {
       expect(pr.dateFromTimestamp(1401205124000).toString())
         .toEqual("PurpleRobot.dateFromTimestamp(1401205124000);");
+    });
+
+    it("#deleteTrigger", function() {
+      expect(pr.deleteTrigger("my-trigger").toString())
+        .toEqual("PurpleRobot.deleteTrigger('my-trigger');");
     });
 
     it("#disableTrigger", function() {
@@ -145,6 +155,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.emitToast('a', true);");
       expect(pr.emitToast("a", false).toString())
         .toEqual("PurpleRobot.emitToast('a', false);");
+    });
+
+    it("#enableTrigger", function() {
+      expect(pr.enableTrigger("MY-TRIGGER").toString())
+        .toEqual("PurpleRobot.enableTrigger('MY-TRIGGER');");
     });
 
     it("#fetchConfig", function() {
@@ -187,6 +202,11 @@ describe("PurpleRobot", function() {
     it("#fetchUserId", function() {
       expect(pr.fetchUserId().toString())
         .toEqual("PurpleRobot.fetchUserId();");
+    });
+
+    it("#fireTrigger", function() {
+      expect(pr.fireTrigger("MY-TRIGGER").toString())
+        .toEqual("PurpleRobot.fireTrigger('MY-TRIGGER');");
     });
 
     it("#launchApplication", function() {
@@ -239,6 +259,11 @@ describe("PurpleRobot", function() {
     it("#readUrl", function() {
       expect(pr.readUrl("http://www.northwestern.edu").toString())
         .toEqual("PurpleRobot.readUrl('http://www.northwestern.edu');");
+    });
+
+    it("#resetTrigger", function() {
+      expect(pr.resetTrigger("MY-TRIGGER").toString())
+        .toEqual("PurpleRobot.resetTrigger('MY-TRIGGER');");
     });
 
     it("#runScript", function() {
