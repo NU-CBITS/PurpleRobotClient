@@ -52,7 +52,7 @@
   // `@public`
   //
   // The version of the API, corresponding to the version of Purple Robot.
-  PR.apiVersion = "1.5.4.3";
+  PR.apiVersion = "1.5.10.0";
 
   // __setEnvironment()__
   //
@@ -521,24 +521,6 @@
   //       });
   PR.prototype.fetchNamespaces = function() {
     return this._push("fetchNamespaces");
-  };
-
-  // __fetchSnapshot(timestamp)__
-  PR.prototype.fetchSnapshot = function(timestamp) {
-    throw new Error("PurpleRobot.prototype.fetchSnapshot not implemented yet");
-  };
-
-  // __fetchSnapshotIds()__
-  //
-  // Example
-  //
-  //     pr.fetchSnapshotIds().execute({
-  //       done: function(ids) {
-  //         ...
-  //       }
-  //     });
-  PR.prototype.fetchSnapshotIds = function() {
-    return this._push("fetchSnapshotIds");
   };
 
   // __fetchTrigger(id)__

@@ -184,11 +184,6 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.fetchNamespaces();");
     });
 
-    it("#fetchSnapshotIds", function() {
-      expect(pr.fetchSnapshotIds().toString())
-        .toEqual("PurpleRobot.fetchSnapshotIds();");
-    });
-
     it("#fetchTrigger", function() {
       expect(pr.fetchTrigger("x").toString())
         .toEqual("PurpleRobot.fetchTrigger('x');");
