@@ -177,7 +177,7 @@
       httpRequest.onreadystatechange = onChange;
       var isAsynchronous = true;
       httpRequest.open("POST", this._serverUrl, isAsynchronous);
-      httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      httpRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
       httpRequest.send("json=" + json);
     } else {
       console.log('PurpleRobot POSTing to "' + this._serverUrl + '": ' + json);
