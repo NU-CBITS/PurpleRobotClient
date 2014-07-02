@@ -150,7 +150,7 @@ pr.playDefaultTone().execute();
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.10.0"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.12.0"</span>;</pre></div></div>
             
         </li>
         
@@ -336,7 +336,7 @@ making an HTTP request to the Purple Robot HTTP server.</p>
       httpRequest.onreadystatechange = onChange;
       <span class="hljs-keyword">var</span> isAsynchronous = <span class="hljs-literal">true</span>;
       httpRequest.open(<span class="hljs-string">"POST"</span>, <span class="hljs-keyword">this</span>._serverUrl, isAsynchronous);
-      httpRequest.setRequestHeader(<span class="hljs-string">"Content-Type"</span>, <span class="hljs-string">"application/x-www-form-urlencoded"</span>);
+      httpRequest.setRequestHeader(<span class="hljs-string">"Content-Type"</span>, <span class="hljs-string">"application/x-www-form-urlencoded; charset=UTF-8"</span>);
       httpRequest.send(<span class="hljs-string">"json="</span> + json);
     } <span class="hljs-keyword">else</span> {
       console.log(<span class="hljs-string">'PurpleRobot POSTing to "'</span> + <span class="hljs-keyword">this</span>._serverUrl + <span class="hljs-string">'": '</span> + json);

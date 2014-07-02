@@ -52,7 +52,7 @@
   // `@public`
   //
   // The version of the API, corresponding to the version of Purple Robot.
-  PR.apiVersion = "1.5.10.0";
+  PR.apiVersion = "1.5.12.0";
 
   // __setEnvironment()__
   //
