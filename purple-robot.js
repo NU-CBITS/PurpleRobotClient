@@ -1,14 +1,32 @@
-;(function() {
-  // ## Example
-  //
-  //     var pr = new PurpleRobot();
-  //     pr.playDefaultTone().execute();
+// ## Examples
+//
+// Basic
+//
+//     var pr = new PurpleRobot();
+//     pr.playDefaultTone().execute();
+//
+// Nesting (API calls within calls)
+//
+//     var playTone = pr.playDefaultTone();
+//     var toast = pr.emitToast("sorry");
+//     var dialog1 = pr.showNativeDialog(
+//       "dialog 1", "are you happy?", "Yes", "No", playTone, toast
+//     );
+//     pr.scheduleScript("dialog 1", 10, "minutes", dialog1)
+//       .execute();
+//
+// Chaining (sequential API calls)
+//
+//     pr.playDefaultTone().emitToast("hey there").execute();
 
+// ## Implementation
+
+;(function() {
   // __constructor__
   //
   // Initialize the client with an options object made up of
   // `serverUrl` - the url to which commands are sent
-  function PurpleRobot(options) {
+  function PR(options) {
     options = options || {};
 
     // __className__
@@ -25,9 +43,6 @@
     // `@private`
     this._script = options.script || "";
   }
-
-  var PR = PurpleRobot;
-  var root = window;
 
   function PurpleRobotArgumentException(methodName, argument, expectedArgument) {
     this.methodName = methodName;
@@ -52,7 +67,7 @@
   // `@public`
   //
   // The version of the API, corresponding to the version of Purple Robot.
-  PR.apiVersion = "1.5.12.0";
+  PR.apiVersion = "1.5.15.0";
 
   // __setEnvironment()__
   //
@@ -75,44 +90,6 @@
     return this;
   };
 
-  // ___push(nextScript)__
-  //
-  // `@private`  
-  // `@returns {Object}` A new PurpleRobot instance.
-  //
-  // Enables chaining of method calls.
-  PR.prototype._push = function(methodName, argStr) {
-    var nextScript = ["PurpleRobot.", methodName, "(", argStr, ");"].join("");
-
-    return new PR({
-      serverUrl: this._serverUrl,
-      script: [this._script, nextScript].join(" ").trim()
-    });
-  };
-
-  // ___stringify(value)__
-  //
-  // `@private`  
-  // `@param {*} value` The value to be stringified.  
-  // `@returns {string}` The stringified representation.
-  //
-  // Returns a string representation of the input. If the input is a
-  // `PurpleRobot` instance, a string expression is returned, otherwise a JSON
-  // stringified version is returned.
-  PR.prototype._stringify = function(value) {
-    var str;
-
-    if (value !== null &&
-        typeof value === "object" &&
-        value.className === this.className) {
-      str = value.toStringExpression();
-    } else {
-      str = JSON.stringify(value);
-    }
-
-    return str;
-  };
-
   // __toString()__
   //
   // `@returns {string}` The current script as a string.
@@ -130,7 +107,6 @@
   // Example
   //
   //     pr.emitToast("foo").toStringExpression();
-  //     // "(function() { return PurpleRobot.emitToast('foo'); })()"
   PR.prototype.toStringExpression = function () {
     return "(function() { return " + this._script + " })()";
   };
@@ -293,16 +269,7 @@
     });
   };
 
-  // __q(value)__
-  //
-  // `@private`  
-  // `@param {string} value` A string argument.  
-  // `@returns {string}` A string with extra single quotes surrounding it.
-  function q(value) {
-    return "'" + value + "'";
-  };
-
-  // ##Purple Robot API
+  // ## Purple Robot API
 
   // __addNamespace(namespace)__
   //
@@ -347,7 +314,7 @@
   // __clearNativeDialogs()__  
   // __clearNativeDialogs(tag)__
   //
-  // `@param {string} tag (optional)` An identifier of a specific dialog.
+  // `@param {string} tag (optional)` An identifier of a specific dialog.  
   // `@returns {Object}` A new PurpleRobot instance.
   //
   // Removes all native dialogs from the screen.
@@ -986,21 +953,54 @@
     throw new Error("PurpleRobot.prototype.widgets not implemented yet");
   };
 
-  // ## More complex examples
-  //
-  // Example of nesting
-  //
-  //     var playTone = pr.playDefaultTone();
-  //     var toast = pr.emitToast("sorry");
-  //     var dialog1 = pr.showNativeDialog(
-  //       "dialog 1", "are you happy?", "Yes", "No", playTone, toast
-  //     );
-  //     pr.scheduleScript("dialog 1", 10, "minutes", dialog1)
-  //       .execute();
-  //
-  // Example of chaining
-  //
-  //     pr.playDefaultTone().emitToast("hey there").execute();
+  // ## Internal methods
 
-  root.PurpleRobot = PurpleRobot;
-}.call(this));
+  // ___push(nextScript)__
+  //
+  // `@private`  
+  // `@returns {Object}` A new PurpleRobot instance.
+  //
+  // Enables chaining of method calls.
+  PR.prototype._push = function(methodName, argStr) {
+    var nextScript = ["PurpleRobot.", methodName, "(", argStr, ");"].join("");
+
+    return new PR({
+      serverUrl: this._serverUrl,
+      script: [this._script, nextScript].join(" ").trim()
+    });
+  };
+
+  // ___stringify(value)__
+  //
+  // `@private`  
+  // `@param {*} value` The value to be stringified.  
+  // `@returns {string}` The stringified representation.
+  //
+  // Returns a string representation of the input. If the input is a
+  // `PurpleRobot` instance, a string expression is returned, otherwise a JSON
+  // stringified version is returned.
+  PR.prototype._stringify = function(value) {
+    var str;
+
+    if (value !== null &&
+        typeof value === "object" &&
+        value.className === this.className) {
+      str = value.toStringExpression();
+    } else {
+      str = JSON.stringify(value);
+    }
+
+    return str;
+  };
+
+  // __q(value)__
+  //
+  // `@private`  
+  // `@param {string} value` A string argument.  
+  // `@returns {string}` A string with extra single quotes surrounding it.
+  function q(value) {
+    return "'" + value + "'";
+  };
+
+  window.PurpleRobot = PR;
+})();

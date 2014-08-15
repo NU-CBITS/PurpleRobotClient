@@ -8,13 +8,20 @@ sent as JSON, then deserialized and interpreted by Purple Robot.
 
 ## Installing
 
-`bower install git@github.com:cbitstech/PurpleRobotClient.git#1.5.12.0`
+`bower install git@github.com:cbitstech/PurpleRobotClient.git#<tagged version>`
+
+Where tagged version is the specific version to be installed.
 
 ## Updating the documentation
 
-Install [docco](http://jashkenas.github.io/docco/): `sudo npm install -g docco`
+1. Install [docco](http://jashkenas.github.io/docco/): `sudo npm install -g docco`
+2. Run docco: `docco purple-robot.js`
 
-Run docco: `docco purple-robot.js`
+## Creating minified version
+
+1. Download [Google Closure Compiler](http://dl.google.com/closure-compiler/compiler-latest.zip)
+2. Unzip
+3. Run `java -jar <compiler dir>/compiler.jar --js purple-robot.js --js_output_file purple-robot.min.js --create_source_map ./purple-robot.min.js.map --source_map_format=V3`
 
 ## Running specs
 
@@ -30,3 +37,15 @@ open `spec/SpecRunner.html`
 
 1. Install [PhantomJS](http://phantomjs.org/download.html)
 2. Run `phantomjs spec/run-jasmine.js spec/SpecRunner.html` or `./run_specs`
+
+## Release
+
+1. update version number
+2. update docs
+3. minify
+4. run specs
+5. update CHANGELOG.md
+6. commit
+7. tag
+8. merge master into gh-pages branch
+9. push all branches and tags
