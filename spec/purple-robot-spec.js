@@ -138,6 +138,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.deleteTrigger('my-trigger');");
     });
 
+    it("#disableProbes", function() {
+      expect(pr.disableProbes().toString())
+        .toEqual("PurpleRobot.disableProbes();");
+    });
+
     it("#disableTrigger", function() {
       expect(pr.disableTrigger("MY-TRIGGER").toString())
         .toEqual("PurpleRobot.disableTrigger('MY-TRIGGER');");
@@ -155,6 +160,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.emitToast('a', true);");
       expect(pr.emitToast("a", false).toString())
         .toEqual("PurpleRobot.emitToast('a', false);");
+    });
+
+    it("#enableProbes", function() {
+      expect(pr.enableProbes().toString())
+        .toEqual("PurpleRobot.enableProbes();");
     });
 
     it("#enableTrigger", function() {
@@ -199,6 +209,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.fetchUserId();");
     });
 
+    it("#fetchWidget", function() {
+      expect(pr.fetchWidget("abcd").toString())
+        .toEqual("PurpleRobot.fetchWidget('abcd');");
+    });
+
     it("#fireTrigger", function() {
       expect(pr.fireTrigger("MY-TRIGGER").toString())
         .toEqual("PurpleRobot.fireTrigger('MY-TRIGGER');");
@@ -217,6 +232,11 @@ describe("PurpleRobot", function() {
     it("#launchUrl", function() {
       expect(pr.launchUrl("https://www.google.com").toString())
         .toEqual("PurpleRobot.launchUrl('https://www.google.com');");
+    });
+
+    it("#loadLibrary", function() {
+      expect(pr.loadLibrary("Underscore").toString())
+        .toEqual("PurpleRobot.loadLibrary('Underscore');");
     });
 
     it("#log", function() {
