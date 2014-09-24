@@ -8,9 +8,6 @@
   ],
   "description": "JavaScript client for Purple Robot services",
   "main": "purple-robot.js",
-  "devDependencies": {
-    "jasmine": "2"
-  },
   "ignore": [
     "README.md",
     "default-triggers.js",

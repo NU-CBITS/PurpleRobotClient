@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-phantomjs spec/run-jasmine.js spec/SpecRunner.html

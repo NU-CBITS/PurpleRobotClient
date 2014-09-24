@@ -27,16 +27,15 @@ Where tagged version is the specific version to be installed.
 
 ### Install dependencies
 
-    bower install
-
-### In a browser
-
-open `spec/SpecRunner.html`
+    npm install
 
 ### Headless
 
-1. Install [PhantomJS](http://phantomjs.org/download.html)
-2. Run `phantomjs spec/run-jasmine.js spec/SpecRunner.html` or `./run_specs`
+    grunt jasmine
+
+### With linting
+
+    grunt
 
 ## Release
 

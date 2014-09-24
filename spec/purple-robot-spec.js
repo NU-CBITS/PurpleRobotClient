@@ -25,7 +25,7 @@ describe("PurpleRobot", function() {
 
   describe(".setEnvironment", function() {
     it("should raise an exception given unrecognized environments", function() {
-      expect(function() { PurpleRobot.setEnvironment("blurg") }).toThrow();
+      expect(function() { PurpleRobot.setEnvironment("blurg"); }).toThrow();
     });
 
     it("should set the environment if recognized", function() {

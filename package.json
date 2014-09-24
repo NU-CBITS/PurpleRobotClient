@@ -1,5 +1,10 @@
 {
   "devDependencies": {
-    "jshint": "~2.5"
+    "jshint": "~2.5",
+    "grunt-contrib-jshint": "~0.10",
+    "grunt-contrib-jasmine": "~0.8"
+  },
+  "scripts": {
+    "test": "grunt"
   }
 }

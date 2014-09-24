@@ -1,2 +1,2 @@
 language: node_js
-script: phantomjs spec/run-jasmine.js spec/SpecRunner.html; ./node_modules/jshint/bin/jshint purple-robot.js
+before_install: npm install -g grunt-cli
