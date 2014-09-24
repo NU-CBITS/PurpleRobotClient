@@ -602,8 +602,37 @@
   };
 
   // __formatDate(date)__
+  //
+  // `@param {date} date` The date to be formatted for trigger purposes
+  // `@returns {string}` The trigger date format for iCal compatibility
+  //  Wed Sep 24 2014 11:17:40 GMT-0500 (CDT) is transformed to "20140924T111740" 
   PR.prototype.formatDate = function(date) {
-    throw new Error("PurpleRobot.prototype.formatDate not implemented yet");
+
+    var formatYear = function(date){
+      return date.getFullYear()
+    }
+
+    var formatMonth = function(date){
+      return ("0" + parseInt(1+date.getMonth())).slice(-2)
+    }
+
+    var formatDays = function(date){
+      return ("0" + parseInt(date.getDate())).slice(-2)
+    }
+
+    var formatHours = function(date){
+      return ("0" + date.getHours()).slice(-2)
+    }
+
+    var formatMinutes = function(date){
+      return ("0" + date.getMinutes()).slice(-2)
+    }
+
+    var formatSeconds = function(date){
+      return ("0" + date.getSeconds()).slice(-2)
+    }
+
+    return formatYear(date) + formatMonth(date) + formatDays(date) + "T" + formatHours(date) + formatMinutes(date) + formatSeconds(date)
   };
 
   // __launchApplication(name)__
