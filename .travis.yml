@@ -1,0 +1,2 @@
+language: node_js
+script: phantomjs spec/run-jasmine.js spec/SpecRunner.html; jshint purple-robot.js
