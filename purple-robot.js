@@ -608,7 +608,7 @@
   //  Wed Sep 24 2014 11:17:40 GMT-0500 (CDT) is transformed to "20140924T111740" 
   PR.prototype.formatDate = function(date) {
 
-   throw new error('There is no formatDate function on PR client') 
+   throw new error('There is no formatDate function on PR client');
 
   };
 
