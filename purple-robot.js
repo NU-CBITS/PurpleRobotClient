@@ -608,7 +608,7 @@
   //  Wed Sep 24 2014 11:17:40 GMT-0500 (CDT) is transformed to "20140924T111740" 
   PR.prototype.formatDate = function(date) {
 
-   throw new error({message:'There is no formatDate function on PR client'}) 
+   throw new error('There is no formatDate function on PR client') 
 
   };
 
@@ -1009,31 +1009,31 @@
     function formatDate (date){
       function formatYear(date){
         return date.getFullYear();
-      };
+      }
 
       function formatMonth(date){
-        return ("0" + parseInt(1+date.getMonth())).slice(-2)
+        return ("0" + parseInt(1+date.getMonth())).slice(-2);
       }
 
       function formatDays(date){
-        return ("0" + parseInt(date.getDate())).slice(-2)
+        return ("0" + parseInt(date.getDate())).slice(-2);
       }
 
       function formatHours(date){
-        return ("0" + date.getHours()).slice(-2)
+        return ("0" + date.getHours()).slice(-2);
       }
 
       function formatMinutes(date){
-        return ("0" + date.getMinutes()).slice(-2)
+        return ("0" + date.getMinutes()).slice(-2);
       }
 
       function formatSeconds  (date){
-        return ("0" + date.getSeconds()).slice(-2)
+        return ("0" + date.getSeconds()).slice(-2);
       }
 
       return formatYear(date) + formatMonth(date) + formatDays(date) + "T" + formatHours(date) + formatMinutes(date) + formatSeconds(date)
     
-    };
+    }
 
     var triggerJson = JSON.stringify({
       type: options.type || "datetime",
