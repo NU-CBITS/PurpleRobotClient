@@ -327,11 +327,11 @@ describe("PurpleRobot", function() {
       var str = pr.updateTrigger({
         script: pr.emitToast("butter"),
         triggerId: "Z",
-        startAt: "20140505T020304",
-        endAt: "20140505T020404"
+        startAt: new Date(2014, 10, 24, 13, 54, 33, 0),
+        endAt: new Date(2014, 10, 24, 13, 54, 34, 0)
       }).toString();
 
-      expect(str).toEqual("PurpleRobot.updateTrigger('Z', {\"type\":\"datetime\",\"name\":\"Z\",\"identifier\":\"Z\",\"action\":\"PurpleRobot.emitToast('butter', true);\",\"datetime_start\":\"20140505T020304\",\"datetime_end\":\"20140505T020404\",\"datetime_repeat\":\"FREQ=DAILY;INTERVAL=1\"});");
+      expect(str).toEqual("PurpleRobot.updateTrigger('Z', {\"type\":\"datetime\",\"name\":\"Z\",\"identifier\":\"Z\",\"action\":\"PurpleRobot.emitToast('butter', true);\",\"datetime_start\":\"20141124T135433\",\"datetime_end\":\"20141124T135434\",\"datetime_repeat\":\"FREQ=DAILY;INTERVAL=1\"});");
     });
 
     it("#version", function() {

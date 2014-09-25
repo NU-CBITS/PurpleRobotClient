@@ -608,31 +608,8 @@
   //  Wed Sep 24 2014 11:17:40 GMT-0500 (CDT) is transformed to "20140924T111740" 
   PR.prototype.formatDate = function(date) {
 
-    var formatYear = function(date){
-      return date.getFullYear()
-    }
+   throw new error({message:'There is no formatDate function on PR client'}) 
 
-    var formatMonth = function(date){
-      return ("0" + parseInt(1+date.getMonth())).slice(-2)
-    }
-
-    var formatDays = function(date){
-      return ("0" + parseInt(date.getDate())).slice(-2)
-    }
-
-    var formatHours = function(date){
-      return ("0" + date.getHours()).slice(-2)
-    }
-
-    var formatMinutes = function(date){
-      return ("0" + date.getMinutes()).slice(-2)
-    }
-
-    var formatSeconds = function(date){
-      return ("0" + date.getSeconds()).slice(-2)
-    }
-
-    return formatYear(date) + formatMonth(date) + formatDays(date) + "T" + formatHours(date) + formatMinutes(date) + formatSeconds(date)
   };
 
   // __launchApplication(name)__
@@ -1020,21 +997,51 @@
   //
   //     pr.updateTrigger({
   //       script: pr.emitToast("butter"),
-  //       startAt: "20140505T020304",
-  //       endAt: "20140505T020404"
+  //       startAt: new Date(2014, 10, 24, 13, 54, 33, 0),
+  //       endAt: new Date(2014, 10, 24, 13, 54, 34, 0)"
   //     });
   PR.prototype.updateTrigger = function(options) {
     options = options || {};
 
     var timestamp = (new Date()).getTime();
     var triggerId = options.triggerId || ("TRIGGER-" + timestamp);
+
+    function formatDate (date){
+      function formatYear(date){
+        return date.getFullYear();
+      };
+
+      function formatMonth(date){
+        return ("0" + parseInt(1+date.getMonth())).slice(-2)
+      }
+
+      function formatDays(date){
+        return ("0" + parseInt(date.getDate())).slice(-2)
+      }
+
+      function formatHours(date){
+        return ("0" + date.getHours()).slice(-2)
+      }
+
+      function formatMinutes(date){
+        return ("0" + date.getMinutes()).slice(-2)
+      }
+
+      function formatSeconds  (date){
+        return ("0" + date.getSeconds()).slice(-2)
+      }
+
+      return formatYear(date) + formatMonth(date) + formatDays(date) + "T" + formatHours(date) + formatMinutes(date) + formatSeconds(date)
+    
+    };
+
     var triggerJson = JSON.stringify({
       type: options.type || "datetime",
       name: triggerId,
       identifier: triggerId,
       action: options.script.toString(),
-      datetime_start: options.startAt,
-      datetime_end: options.endAt,
+      datetime_start: formatDate(options.startAt),
+      datetime_end: formatDate(options.endAt),
       datetime_repeat: options.repeatRule || "FREQ=DAILY;INTERVAL=1"
     });
 
