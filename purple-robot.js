@@ -138,17 +138,18 @@
       script: this.toString()
     });
 
-    if (PR.env !== 'web') {
-      function onChange() {
-        if (callbacks && httpRequest.readyState === XMLHttpRequest.DONE) {
-          if (httpRequest.response === null) {
-            callbacks.fail && callbacks.fail();
-          } else if (callbacks.done) {
-            callbacks.done(JSON.parse(httpRequest.response).payload);
-          }
+    function onChange() {
+      if (callbacks && httpRequest.readyState === XMLHttpRequest.DONE) {
+        if (httpRequest.response === null &&
+            typeof callbacks.fail === "function") {
+          callbacks.fail();
+        } else if (callbacks.done) {
+          callbacks.done(JSON.parse(httpRequest.response).payload);
         }
       }
+    }
 
+    if (PR.env !== 'web') {
       var httpRequest = new XMLHttpRequest();
       httpRequest.onreadystatechange = onChange;
       var isAsynchronous = true;
@@ -1031,7 +1032,8 @@
         return ("0" + date.getSeconds()).slice(-2);
       }
 
-      return formatYear(date) + formatMonth(date) + formatDays(date) + "T" + formatHours(date) + formatMinutes(date) + formatSeconds(date)
+      return formatYear(date) + formatMonth(date) + formatDays(date) + "T" +
+             formatHours(date) + formatMinutes(date) + formatSeconds(date);
     
     }
 
@@ -1144,7 +1146,7 @@
   // `@returns {string}` A string with extra single quotes surrounding it.
   function q(value) {
     return "'" + value + "'";
-  };
+  }
 
   window.PurpleRobot = PR;
 })();
