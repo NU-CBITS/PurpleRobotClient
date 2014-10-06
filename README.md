@@ -1,5 +1,7 @@
 # Purple Robot Client
 
+[![Build Status](https://travis-ci.org/cbitstech/PurpleRobotClient.svg?branch=master)](https://travis-ci.org/cbitstech/PurpleRobotClient)
+
 A library that simplifies command passing to [Purple Robot](https://github.com/cbitstech/Purple-Robot-Manager)
 via its HTTP server and JavaScript API. Scripts are generated as strings and
 sent as JSON, then deserialized and interpreted by Purple Robot.
