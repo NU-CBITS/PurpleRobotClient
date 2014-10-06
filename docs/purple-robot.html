@@ -160,7 +160,7 @@ pr.scheduleScript(<span class="hljs-string">"dialog 1"</span>, <span class="hljs
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.16.0"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.16.1"</span>;</pre></div></div>
             
         </li>
         
@@ -275,17 +275,18 @@ making an HTTP request to the Purple Robot HTTP server.</p>
       script: <span class="hljs-keyword">this</span>.toString()
     });
 
-    <span class="hljs-keyword">if</span> (PR.env !== <span class="hljs-string">'web'</span>) {
-      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onChange</span><span class="hljs-params">()</span> {</span>
-        <span class="hljs-keyword">if</span> (callbacks &amp;&amp; httpRequest.readyState === XMLHttpRequest.DONE) {
-          <span class="hljs-keyword">if</span> (httpRequest.response === <span class="hljs-literal">null</span>) {
-            callbacks.fail &amp;&amp; callbacks.fail();
-          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (callbacks.done) {
-            callbacks.done(<span class="hljs-built_in">JSON</span>.parse(httpRequest.response).payload);
-          }
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onChange</span><span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">if</span> (callbacks &amp;&amp; httpRequest.readyState === XMLHttpRequest.DONE) {
+        <span class="hljs-keyword">if</span> (httpRequest.response === <span class="hljs-literal">null</span> &amp;&amp;
+            <span class="hljs-keyword">typeof</span> callbacks.fail === <span class="hljs-string">"function"</span>) {
+          callbacks.fail();
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (callbacks.done) {
+          callbacks.done(<span class="hljs-built_in">JSON</span>.parse(httpRequest.response).payload);
         }
       }
+    }
 
+    <span class="hljs-keyword">if</span> (PR.env !== <span class="hljs-string">'web'</span>) {
       <span class="hljs-keyword">var</span> httpRequest = <span class="hljs-keyword">new</span> XMLHttpRequest();
       httpRequest.onreadystatechange = onChange;
       <span class="hljs-keyword">var</span> isAsynchronous = <span class="hljs-literal">true</span>;
@@ -968,11 +969,16 @@ pr.fetchEncryptedString(<span class="hljs-string">"y"</span>);
                 <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p><strong>formatDate(date)</strong></p>
+<p><code>@param {date} date</code> The date to be formatted for trigger purposes
+<code>@returns {string}</code> The trigger date format for iCal compatibility
+ Wed Sep 24 2014 11:17:40 GMT-0500 (CDT) is transformed to “20140924T111740” </p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  PR.prototype.formatDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(date)</span> {</span>
-    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"PurpleRobot.prototype.formatDate not implemented yet"</span>);
+
+   <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> error(<span class="hljs-string">'There is no formatDate function on PR client'</span>);
+
   };</pre></div></div>
             
         </li>
@@ -1556,9 +1562,9 @@ recurrence rule.</p>
 <p>Example</p>
 <p>The following would emit a toast daily at the same time:</p>
 <pre><code>pr.updateTrigger({
-  script: pr.emitToast(<span class="hljs-string">"butter"</span>),
-  startAt: <span class="hljs-string">"20140505T020304"</span>,
-  endAt: <span class="hljs-string">"20140505T020404"</span>
+  script: pr.emitToast(&quot;butter&quot;),
+  startAt: new Date(2014, 10, 24, 13, 54, 33, 0),
+  endAt: new Date(2014, 10, 24, 13, 54, 34, 0)&quot;
 });
 </code></pre>
             </div>
@@ -1568,14 +1574,46 @@ recurrence rule.</p>
 
     <span class="hljs-keyword">var</span> timestamp = (<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()).getTime();
     <span class="hljs-keyword">var</span> triggerId = options.triggerId || (<span class="hljs-string">"TRIGGER-"</span> + timestamp);
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">formatDate</span> <span class="hljs-params">(date)</span>{</span>
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">formatYear</span><span class="hljs-params">(date)</span>{</span>
+        <span class="hljs-keyword">return</span> date.getFullYear();
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">formatMonth</span><span class="hljs-params">(date)</span>{</span>
+        <span class="hljs-keyword">return</span> (<span class="hljs-string">"0"</span> + <span class="hljs-built_in">parseInt</span>(<span class="hljs-number">1</span>+date.getMonth())).slice(-<span class="hljs-number">2</span>);
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">formatDays</span><span class="hljs-params">(date)</span>{</span>
+        <span class="hljs-keyword">return</span> (<span class="hljs-string">"0"</span> + <span class="hljs-built_in">parseInt</span>(date.getDate())).slice(-<span class="hljs-number">2</span>);
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">formatHours</span><span class="hljs-params">(date)</span>{</span>
+        <span class="hljs-keyword">return</span> (<span class="hljs-string">"0"</span> + date.getHours()).slice(-<span class="hljs-number">2</span>);
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">formatMinutes</span><span class="hljs-params">(date)</span>{</span>
+        <span class="hljs-keyword">return</span> (<span class="hljs-string">"0"</span> + date.getMinutes()).slice(-<span class="hljs-number">2</span>);
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">formatSeconds</span>  <span class="hljs-params">(date)</span>{</span>
+        <span class="hljs-keyword">return</span> (<span class="hljs-string">"0"</span> + date.getSeconds()).slice(-<span class="hljs-number">2</span>);
+      }
+
+      <span class="hljs-keyword">return</span> formatYear(date) + formatMonth(date) + formatDays(date) + <span class="hljs-string">"T"</span> +
+             formatHours(date) + formatMinutes(date) + formatSeconds(date);
+    
+    }
+
     <span class="hljs-keyword">var</span> triggerJson = <span class="hljs-built_in">JSON</span>.stringify({
       type: options.type || <span class="hljs-string">"datetime"</span>,
       name: triggerId,
       identifier: triggerId,
       action: options.script.toString(),
-      datetime_start: options.startAt,
-      datetime_end: options.endAt,
-      datetime_repeat: options.repeatRule || <span class="hljs-string">"FREQ=DAILY;INTERVAL=1"</span>
+      datetime_start: formatDate(options.startAt),
+      datetime_end: formatDate(options.endAt),
+      datetime_repeat: options.repeatRule || <span class="hljs-string">"FREQ=DAILY;INTERVAL=1"</span>,
+      fire_on_boot: options.fire_on_boot || <span class="hljs-literal">true</span>
     });
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"updateTrigger"</span>, q(triggerId) + <span class="hljs-string">", "</span> + triggerJson);
@@ -1751,7 +1789,7 @@ stringified version is returned.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">q</span><span class="hljs-params">(value)</span> {</span>
     <span class="hljs-keyword">return</span> <span class="hljs-string">"'"</span> + value + <span class="hljs-string">"'"</span>;
-  };
+  }
 
   window.PurpleRobot = PR;
 })();</pre></div></div>
