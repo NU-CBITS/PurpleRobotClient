@@ -138,6 +138,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.deleteTrigger('my-trigger');");
     });
 
+    it("#disableEachProbe", function() {
+      expect(pr.disableEachProbe().toString())
+        .toEqual("PurpleRobot.disableEachProbe();");
+    });
+
     it("#disableProbes", function() {
       expect(pr.disableProbes().toString())
         .toEqual("PurpleRobot.disableProbes();");
