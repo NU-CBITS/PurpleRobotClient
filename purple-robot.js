@@ -67,7 +67,7 @@
   // `@public`
   //
   // The version of the API, corresponding to the version of Purple Robot.
-  PR.apiVersion = "1.5.16.1";
+  PR.apiVersion = "1.5.16.2";
 
   // __setEnvironment()__
   //
@@ -374,11 +374,26 @@
     return this._push("deleteTrigger", q(id));
   };
 
+  // __disableEachProbe()__
+  //
+  // `@returns {Object}` A new PurpleRobot instance.
+  //
+  // Disables all individual probes by setting the disabled flag. **Must** have
+  // probes globally enabled for this to take effect.
+  //
+  // Example
+  //
+  //     pr.disableEachProbe();
+  PR.prototype.disableEachProbe = function() {
+    return this._push("disableEachProbe");
+  };
+
   // __disableProbes()__
   //
   // `@returns {Object}` A new PurpleRobot instance.
   //
-  // Disables all probes.
+  // Disables probes globally, but does not affect individual probe settings,
+  // including enabled/disabled flags.
   //
   // Example
   //
