@@ -1,3 +1,8 @@
+## version 1.5.18.0
+  * simplified development tasks with grunt
+  * updated README accordingly
+  * implemented `updateProbe`
+
 ## version 1.5.16.2
   * implemented `disableEachProbe`
 

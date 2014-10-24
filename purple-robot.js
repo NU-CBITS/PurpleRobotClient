@@ -67,7 +67,7 @@
   // `@public`
   //
   // The version of the API, corresponding to the version of Purple Robot.
-  PR.apiVersion = "1.5.16.2";
+  PR.apiVersion = "1.5.18.0";
 
   // __setEnvironment()__
   //
@@ -975,7 +975,7 @@
 
   // __updateConfig(options)__
   //
-  // `@param {Object} options` The options to configure.
+  // `@param {Object} options` The options to configure.  
   // `@returns {Object}` A new PurpleRobot instance.
   //
   // Example
@@ -998,6 +998,23 @@
   //     config_restrict_data_wifi
   PR.prototype.updateConfig = function(options) {
     return this._push("updateConfig", [JSON.stringify(options)].join(", "));
+  };
+
+  // __updateProbe(options)__
+  // 
+  // `@param {Object}` The probe settings.  
+  // `@returns {Object}` A new PurpleRobot instance.
+  //
+  // Applies settings to an individual probe.
+  //
+  // Example
+  //
+  //    pr.updateProbe({
+  //      name: "edu.northwestern.cbits.purple_robot_manager.probes.builtin.BatteryProbe",
+  //      enabled: true
+  //    });
+  PR.prototype.updateProbe = function(options) {
+    return this._push("updateProbe", JSON.stringify(options));
   };
 
   // __updateTrigger(options)__
