@@ -1,3 +1,6 @@
+## version 1.5.18.1
+  * implemented `updateConfigUrl`
+
 ## version 1.5.18.0
   * simplified development tasks with grunt
   * updated README accordingly

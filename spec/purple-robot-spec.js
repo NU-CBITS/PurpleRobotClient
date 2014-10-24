@@ -328,6 +328,12 @@ describe("PurpleRobot", function() {
       expect(str).toEqual("PurpleRobot.showScriptNotification('My app', 'Press here', true, false, \"PurpleRobot.emitToast('You pressed it', true);\");");
     });
 
+    it("#updateConfigUrl", function() {
+      var str = pr.updateConfigUrl("http://foo.com").toString();
+
+      expect(str).toEqual("PurpleRobot.updateConfigUrl('http://foo.com');");
+    });
+
     it("#updateProbe", function() {
       var str = pr.updateProbe({ name: "probie", enabled: true }).toString();
 

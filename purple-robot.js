@@ -67,7 +67,7 @@
   // `@public`
   //
   // The version of the API, corresponding to the version of Purple Robot.
-  PR.apiVersion = "1.5.18.0";
+  PR.apiVersion = "1.5.18.1";
 
   // __setEnvironment()__
   //
@@ -998,6 +998,19 @@
   //     config_restrict_data_wifi
   PR.prototype.updateConfig = function(options) {
     return this._push("updateConfig", [JSON.stringify(options)].join(", "));
+  };
+
+  // __updateConfigUrl(url)__
+  //
+  // `@param {String} url` The URL to which Purple Robot should post probe
+  // payloads. Also referred to as the HTTP Upload Endpoint.
+  // `@returns {Object}` A new PurpleRobot instance.
+  //
+  // Example
+  //
+  //    pr.updateConfigUrl("http://my-endpoint");
+  PR.prototype.updateConfigUrl = function(url) {
+    return this._push("updateConfigUrl", q(url));
   };
 
   // __updateProbe(options)__
