@@ -3,10 +3,20 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
-    jasmine : {
-      src : 'purple-robot.min.js',
-      options : {
-        specs : 'spec/**/*.js'
+    uglify: {
+      purple_robot: {
+        options: {
+          sourceMap: true
+        },
+        files: {
+          'purple-robot.min.js': ['purple-robot.js']
+        }
+      }
+    },
+    jasmine: {
+      src: 'purple-robot.min.js',
+      options: {
+        specs: 'spec/**/*.js'
       }
     },
     jshint: {
@@ -18,13 +28,22 @@ module.exports = function(grunt) {
       options: {
         jshintrc: '.jshintrc'
       }
+    },
+    docco: {
+      docs: {
+        src: ['purple-robot.js']
+      }
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-docco3');
 
-  grunt.registerTask('test', ['jshint', 'jasmine']);
+  grunt.registerTask('minify', ['jshint', 'uglify']);
+  grunt.registerTask('test', ['jasmine']);
+  grunt.registerTask('document', ['docco']);
 
-  grunt.registerTask('default', ['test']);
+  grunt.registerTask('default', ['minify', 'test', 'document']);
 };

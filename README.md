@@ -14,39 +14,30 @@ sent as JSON, then deserialized and interpreted by Purple Robot.
 
 Where tagged version is the specific version to be installed.
 
-## Updating the documentation
+## Developing
 
-1. Install [docco](http://jashkenas.github.io/docco/): `sudo npm install -g docco`
-2. Run docco: `docco purple-robot.js`
+The first thing to do is install the development dependencies with `npm install`.
 
-## Creating minified version
+### Updating the documentation
 
-1. Download [Google Closure Compiler](http://dl.google.com/closure-compiler/compiler-latest.zip)
-2. Unzip
-3. Run `java -jar <compiler dir>/compiler.jar --js purple-robot.js --js_output_file purple-robot.min.js --create_source_map ./purple-robot.min.js.map --source_map_format=V3`
+    grunt document
 
-## Running specs
+### Creating minified version
 
-### Install dependencies
+    grunt minify
 
-    npm install
+### Running specs
 
-### Headless
+Note that tests are run against the minified version.
 
-    grunt jasmine
+    grunt test
 
-### With linting
-
-    grunt
-
-## Release
+## Releasing
 
 1. update version number
-2. update docs
-3. minify
-4. run specs
-5. update CHANGELOG.md
-6. commit
-7. tag
-8. merge master into gh-pages branch
-9. push all branches and tags
+2. `grunt`
+3. update CHANGELOG.md
+4. commit
+5. tag
+6. merge master into gh-pages branch
+7. push all branches and tags
