@@ -160,7 +160,7 @@ pr.scheduleScript(<span class="hljs-string">"dialog 1"</span>, <span class="hljs
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.18.1"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.18.2"</span>;</pre></div></div>
             
         </li>
         
@@ -1013,6 +1013,31 @@ pr.fetchEncryptedString(<span class="hljs-string">"y"</span>);
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
+              <p><strong>getUploadUrl()</strong></p>
+<p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
+<p>Fetches the HTTP Upload Endpoint.</p>
+<p>Example</p>
+<p>   pr.getUploadUrl().execute({
+     done: function(result) {
+       …
+     }
+   });</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  PR.prototype.getUploadUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"getUploadUrl"</span>);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
               <p><strong>launchApplication(name)</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
 <p>Launches the specified Android application as if the user had pressed
@@ -1029,11 +1054,11 @@ the icon.</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p><strong>launchInternalUrl(url)</strong></p>
 <p><code>@param {string} url</code> The URL to request.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1050,11 +1075,11 @@ the icon.</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><strong>launchUrl(url)</strong></p>
 <p><code>@param {string} url</code> The URL to request.<br><code>@returns {Object}</code> A new object instance.</p>
@@ -1071,11 +1096,11 @@ the icon.</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p><strong>loadLibrary(name)</strong></p>
 <p><code>@param {string} name</code> The name of the JavaScript library to load.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1096,11 +1121,11 @@ Underscore
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p><strong>log(name, value)</strong></p>
 <p><code>@param {string} name</code> The prefix to the log message.<br><code>@param {*} value</code> The contents of the log message.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1117,11 +1142,11 @@ Underscore
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p><strong>models()</strong></p>
 
@@ -1134,11 +1159,11 @@ Underscore
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p><strong>now()</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1159,11 +1184,11 @@ Underscore
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p><strong>packageForApplicationName(applicationName)</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1184,11 +1209,11 @@ Underscore
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p><strong>parseDate(dateString)</strong></p>
 
@@ -1201,11 +1226,11 @@ Underscore
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p><strong>persistEncryptedString(key, value, namespace)</strong><br><strong>persistEncryptedString(key, value)</strong></p>
 <p><code>@param {string} key</code> The name of the key where the value will be stored.<br><code>@param {*} value</code> The thing to store.<br><code>@param {string} namespace (optional)</code> The namespace in which to store the
@@ -1228,11 +1253,11 @@ pr.persistEncryptedString(<span class="hljs-string">"foo"</span>, <span class="h
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><strong>persistString(key, value, namespace)</strong><br><strong>persistString(key, value)</strong></p>
 <p><code>@param {string} key</code> The name of the key where the value will be stored.<br><code>@param {*} value</code> The thing to store.<br><code>@param {string} namespace (optional)</code> The namespace in which to store the
@@ -1255,11 +1280,11 @@ pr.persistString(<span class="hljs-string">"foo"</span>, <span class="hljs-strin
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p><strong>playDefaultTone()</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1276,11 +1301,11 @@ pr.persistString(<span class="hljs-string">"foo"</span>, <span class="hljs-strin
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><strong>playTone(tone)</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1297,11 +1322,11 @@ pr.persistString(<span class="hljs-string">"foo"</span>, <span class="hljs-strin
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p><strong>predictions()</strong></p>
 
@@ -1314,11 +1339,11 @@ pr.persistString(<span class="hljs-string">"foo"</span>, <span class="hljs-strin
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p><strong>readings()</strong></p>
 
@@ -1331,11 +1356,11 @@ pr.persistString(<span class="hljs-string">"foo"</span>, <span class="hljs-strin
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p><strong>readUrl(url)</strong></p>
 <p><code>@param {string}</code> The URL to GET.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1356,11 +1381,11 @@ pr.persistString(<span class="hljs-string">"foo"</span>, <span class="hljs-strin
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p><strong>resetTrigger(id)</strong></p>
 <p><code>@param {string} id</code> The trigger ID.</p>
@@ -1378,11 +1403,11 @@ PurpleRobot does nothing.</strong></p>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p><strong>runScript(script)</strong></p>
 <p><code>@param {Object} script</code> A PurpleRobot instance.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1399,11 +1424,11 @@ PurpleRobot does nothing.</strong></p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p><strong>scheduleScript(name, minutes, script)</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1423,11 +1448,31 @@ PurpleRobot does nothing.</strong></p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p><strong>setUploadUrl(url)</strong></p>
+<p><code>@param {String} url</code> The URL to set as the HTTP Upload Endpoint.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
+<p>Example</p>
+<p>   pr.setUploadUrl(“<a href="https://my-endpoint">https://my-endpoint</a>“);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  PR.prototype.setUploadUrl = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(url)</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"setUploadUrl"</span>, q(url));
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p><strong>setUserId(value)</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1444,11 +1489,11 @@ PurpleRobot does nothing.</strong></p>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p><strong>showApplicationLaunchNotification(options)</strong></p>
 
@@ -1461,11 +1506,11 @@ PurpleRobot does nothing.</strong></p>
         </li>
         
         
-        <li id="section-65">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p><strong>showNativeDialog(options)</strong></p>
 <p><code>@param {Object} options</code> Parameterized options for the dialog, including:
@@ -1506,11 +1551,11 @@ scripts to be run when each is pressed.</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p><strong>showScriptNotification(options)</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1538,11 +1583,11 @@ it is pressed.</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p><strong>updateConfig(options)</strong></p>
 <p><code>@param {Object} options</code> The options to configure.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1571,16 +1616,15 @@ config_restrict_data_wifi
         </li>
         
         
-        <li id="section-68">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p><strong>updateConfigUrl(url)</strong></p>
-<p><code>@param {String} url</code> The URL to which Purple Robot should post probe
-payloads. Also referred to as the HTTP Upload Endpoint.
-<code>@returns {Object}</code> A new PurpleRobot instance.</p>
+<p><code>@param {String} url</code> The URL from which Purple Robot should fetch JSON
+configurations.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
 <p>Example</p>
 <p>   pr.updateConfigUrl(“<a href="http://my-endpoint">http://my-endpoint</a>“);</p>
 
@@ -1593,11 +1637,11 @@ payloads. Also referred to as the HTTP Upload Endpoint.
         </li>
         
         
-        <li id="section-69">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p><strong>updateProbe(options)</strong></p>
 <p><code>@param {Object}</code> The probe settings.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1617,11 +1661,11 @@ payloads. Also referred to as the HTTP Upload Endpoint.
         </li>
         
         
-        <li id="section-70">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p><strong>updateTrigger(options)</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1690,11 +1734,11 @@ recurrence rule.</p>
         </li>
         
         
-        <li id="section-71">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p><strong>updateWidget(parameters)</strong></p>
 
@@ -1707,11 +1751,11 @@ recurrence rule.</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p><strong>version()</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1732,11 +1776,11 @@ recurrence rule.</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p><strong>vibrate(pattern)</strong></p>
 <p><code>@param {string} pattern</code> The name of the vibration pattern.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1759,11 +1803,11 @@ sos
         </li>
         
         
-        <li id="section-74">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p><strong>widgets()</strong></p>
 
@@ -1776,11 +1820,11 @@ sos
         </li>
         
         
-        <li id="section-75">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <h2 id="internal-methods">Internal methods</h2>
 
@@ -1789,11 +1833,11 @@ sos
         </li>
         
         
-        <li id="section-76">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p><strong>_push(nextScript)</strong></p>
 <p><code>@private</code><br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1813,11 +1857,11 @@ sos
         </li>
         
         
-        <li id="section-77">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p><strong>_stringify(value)</strong></p>
 <p><code>@private</code><br><code>@param {*} value</code> The value to be stringified.<br><code>@returns {string}</code> The stringified representation.</p>
@@ -1844,11 +1888,11 @@ stringified version is returned.</p>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p><strong>q(value)</strong></p>
 <p><code>@private</code><br><code>@param {string} value</code> A string argument.<br><code>@returns {string}</code> A string with extra single quotes surrounding it.</p>

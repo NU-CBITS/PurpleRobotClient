@@ -67,7 +67,7 @@
   // `@public`
   //
   // The version of the API, corresponding to the version of Purple Robot.
-  PR.apiVersion = "1.5.18.1";
+  PR.apiVersion = "1.5.18.2";
 
   // __setEnvironment()__
   //
@@ -628,6 +628,23 @@
 
   };
 
+  // __getUploadUrl()__
+  //
+  // `@returns {Object}` A new PurpleRobot instance.
+  //
+  // Fetches the HTTP Upload Endpoint.
+  //
+  // Example
+  //
+  //    pr.getUploadUrl().execute({
+  //      done: function(result) {
+  //        ...
+  //      }
+  //    });
+  PR.prototype.getUploadUrl = function() {
+    return this._push("getUploadUrl");
+  };
+
   // __launchApplication(name)__
   //
   // `@returns {Object}` A new PurpleRobot instance.
@@ -893,6 +910,18 @@
     return this._push("scheduleScript", q(name) + ", " + timestampStr + ", " + script.toJson());
   };
 
+  // __setUploadUrl(url)__
+  //
+  // `@param {String} url` The URL to set as the HTTP Upload Endpoint.  
+  // `@returns {Object}` A new PurpleRobot instance.
+  //
+  // Example
+  //
+  //    pr.setUploadUrl("https://my-endpoint");
+  PR.prototype.setUploadUrl = function(url) {
+    return this._push("setUploadUrl", q(url));
+  };
+
   // __setUserId(value)__
   //
   // `@returns {Object}` A new PurpleRobot instance.
@@ -1002,8 +1031,8 @@
 
   // __updateConfigUrl(url)__
   //
-  // `@param {String} url` The URL to which Purple Robot should post probe
-  // payloads. Also referred to as the HTTP Upload Endpoint.
+  // `@param {String} url` The URL from which Purple Robot should fetch JSON
+  // configurations.  
   // `@returns {Object}` A new PurpleRobot instance.
   //
   // Example

@@ -224,6 +224,11 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.fireTrigger('MY-TRIGGER');");
     });
 
+    it("#getUploadUrl", function() {
+      expect(pr.getUploadUrl().toString())
+        .toEqual("PurpleRobot.getUploadUrl();");
+    });
+
     it("#launchApplication", function() {
       expect(pr.launchApplication("foo.bar").toString())
         .toEqual("PurpleRobot.launchApplication('foo.bar');");
@@ -294,6 +299,11 @@ describe("PurpleRobot", function() {
     it("#scheduleScript", function() {
       expect(pr.scheduleScript("Tone 1", 3, pr.playDefaultTone()).toString())
         .toEqual("PurpleRobot.scheduleScript('Tone 1', (function() { var now = new Date(); var scheduled = new Date(now.getTime() + 3 * 60000); var pad = function(n) { return n < 10 ? '0' + n : n; }; return '' + scheduled.getFullYear() + pad(scheduled.getMonth() + 1) + pad(scheduled.getDate()) + 'T' + pad(scheduled.getHours()) + pad(scheduled.getMinutes()) + pad(scheduled.getSeconds()); })(), \"PurpleRobot.playDefaultTone();\");");
+    });
+
+    it("#setUploadUrl", function() {
+      expect(pr.setUploadUrl("https://my-endpoint").toString())
+        .toEqual("PurpleRobot.setUploadUrl('https://my-endpoint');");
     });
 
     it("#setUserId", function() {

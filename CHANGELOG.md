@@ -1,3 +1,6 @@
+## version 1.5.18.2
+  * implemented `getUploadUrl`, `setUploadUrl`
+
 ## version 1.5.18.1
   * implemented `updateConfigUrl`
 
