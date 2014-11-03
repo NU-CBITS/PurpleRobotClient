@@ -1,3 +1,7 @@
+## version 1.5.18.3
+  * updated `playDefaultTone` and `vibrate`
+  * implemented `stopPlayback`
+
 ## version 1.5.18.2
   * implemented `getUploadUrl`, `setUploadUrl`
 

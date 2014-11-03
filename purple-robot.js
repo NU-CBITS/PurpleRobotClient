@@ -67,7 +67,7 @@
   // `@public`
   //
   // The version of the API, corresponding to the version of Purple Robot.
-  PR.apiVersion = "1.5.18.2";
+  PR.apiVersion = "1.5.18.3";
 
   // __setEnvironment()__
   //
@@ -813,16 +813,23 @@
   };
 
   // __playDefaultTone()__
+  // __playDefaultTone(loops)__
   //
+  // `@param {boolean} loops (optional)` The tone loops indefinitely.  
   // `@returns {Object}` A new PurpleRobot instance.
   //
   // Plays a default Android notification sound.
   //
-  // Example
+  // Examples
   //
   //     pr.playDefaultTone();
-  PR.prototype.playDefaultTone = function() {
-    return this._push("playDefaultTone");
+  //     pr.playDefaultTone(true);
+  PR.prototype.playDefaultTone = function(loops) {
+    if (typeof loops !== "boolean") {
+      loops = false;
+    }
+
+    return this._push("playDefaultTone", loops);
   };
 
   // __playTone(tone)__
@@ -1002,6 +1009,19 @@
       options.script.toJson()].join(", "));
   };
 
+  // __stopPlayback()__
+  //
+  // `@returns {Ojbect}` A new PurpleRobot instance.
+  //
+  // Stops tone playback.
+  //
+  // Example
+  //
+  //     pr.stopPlayback();
+  PR.prototype.stopPlayback = function() {
+    return this._push("stopPlayback");
+  };
+
   // __updateConfig(options)__
   //
   // `@param {Object} options` The options to configure.  
@@ -1148,8 +1168,10 @@
   };
 
   // __vibrate(pattern)__
+  // __vibrate(pattern, repeats)__
   //
   // `@param {string} pattern` The name of the vibration pattern.  
+  // `@param {boolean} repeats (optional)` True if the pattern repeats.  
   // `@returns {Object}` A new PurpleRobot instance.
   //
   // Vibrates the phone with a preset pattern.
@@ -1157,16 +1179,21 @@
   // Example
   //
   //     pr.vibrate("buzz");
+  //     pr.vibrate("buzz", true);
   //
   // Patterns
   //
   //     blip
   //     buzz
   //     sos
-  PR.prototype.vibrate = function(pattern) {
+  PR.prototype.vibrate = function(pattern, repeats) {
     pattern = pattern || "buzz";
 
-    return this._push("vibrate", q(pattern));
+    if (typeof repeats !== "boolean") {
+      repeats = false;
+    }
+
+    return this._push("vibrate", q(pattern) + ", " + repeats);
   };
 
   // __widgets()__

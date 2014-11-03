@@ -8,7 +8,7 @@ describe("PurpleRobot", function() {
 
   it("should be able to generate a string representation of chained methods", function() {
     var str = pr.emitReading("a", "1").playDefaultTone().toString();
-    expect(str).toEqual("PurpleRobot.emitReading('a', \"1\"); PurpleRobot.playDefaultTone();");
+    expect(str).toEqual("PurpleRobot.emitReading('a', \"1\"); PurpleRobot.playDefaultTone(false);");
   });
 
   it("should generate a string representing nested methods", function() {
@@ -65,7 +65,7 @@ describe("PurpleRobot", function() {
   describe("#ifThenElse", function() {
     it("should generate a conditional statement", function() {
       expect(pr.ifThenElse(pr.isEqual(1, 1), pr.playDefaultTone(), pr.vibrate()).toString())
-        .toEqual("if (1 == 1) { PurpleRobot.playDefaultTone(); } else { PurpleRobot.vibrate('buzz'); }");
+        .toEqual("if (1 == 1) { PurpleRobot.playDefaultTone(false); } else { PurpleRobot.vibrate('buzz', false); }");
     });
   });
 
@@ -273,7 +273,9 @@ describe("PurpleRobot", function() {
 
     it("#playDefaultTone", function() {
       expect(pr.playDefaultTone().toString())
-        .toEqual("PurpleRobot.playDefaultTone();");
+        .toEqual("PurpleRobot.playDefaultTone(false);");
+      expect(pr.playDefaultTone(true).toString())
+        .toEqual("PurpleRobot.playDefaultTone(true);");
     });
 
     it("#playTone", function() {
@@ -293,12 +295,12 @@ describe("PurpleRobot", function() {
 
     it("#runScript", function() {
       expect(pr.runScript(pr.playDefaultTone()).toString())
-        .toEqual("PurpleRobot.runScript(\"PurpleRobot.playDefaultTone();\");");
+        .toEqual("PurpleRobot.runScript(\"PurpleRobot.playDefaultTone(false);\");");
     });
 
     it("#scheduleScript", function() {
       expect(pr.scheduleScript("Tone 1", 3, pr.playDefaultTone()).toString())
-        .toEqual("PurpleRobot.scheduleScript('Tone 1', (function() { var now = new Date(); var scheduled = new Date(now.getTime() + 3 * 60000); var pad = function(n) { return n < 10 ? '0' + n : n; }; return '' + scheduled.getFullYear() + pad(scheduled.getMonth() + 1) + pad(scheduled.getDate()) + 'T' + pad(scheduled.getHours()) + pad(scheduled.getMinutes()) + pad(scheduled.getSeconds()); })(), \"PurpleRobot.playDefaultTone();\");");
+        .toEqual("PurpleRobot.scheduleScript('Tone 1', (function() { var now = new Date(); var scheduled = new Date(now.getTime() + 3 * 60000); var pad = function(n) { return n < 10 ? '0' + n : n; }; return '' + scheduled.getFullYear() + pad(scheduled.getMonth() + 1) + pad(scheduled.getDate()) + 'T' + pad(scheduled.getHours()) + pad(scheduled.getMinutes()) + pad(scheduled.getSeconds()); })(), \"PurpleRobot.playDefaultTone(false);\");");
     });
 
     it("#setUploadUrl", function() {
@@ -338,6 +340,11 @@ describe("PurpleRobot", function() {
       expect(str).toEqual("PurpleRobot.showScriptNotification('My app', 'Press here', true, false, \"PurpleRobot.emitToast('You pressed it', true);\");");
     });
 
+    it("#stopPlayback", function() {
+      expect(pr.stopPlayback().toString())
+        .toEqual("PurpleRobot.stopPlayback();");
+    });
+
     it("#updateConfigUrl", function() {
       var str = pr.updateConfigUrl("http://foo.com").toString();
 
@@ -366,8 +373,9 @@ describe("PurpleRobot", function() {
     });
 
     it("#vibrate", function() {
-      expect(pr.vibrate().toString()).toEqual("PurpleRobot.vibrate('buzz');");
-      expect(pr.vibrate("sos").toString()).toEqual("PurpleRobot.vibrate('sos');");
+      expect(pr.vibrate().toString()).toEqual("PurpleRobot.vibrate('buzz', false);");
+      expect(pr.vibrate("sos").toString()).toEqual("PurpleRobot.vibrate('sos', false);");
+      expect(pr.vibrate("sos", true).toString()).toEqual("PurpleRobot.vibrate('sos', true);");
     });
   });
 });

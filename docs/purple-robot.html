@@ -160,7 +160,7 @@ pr.scheduleScript(<span class="hljs-string">"dialog 1"</span>, <span class="hljs
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.18.2"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.18.3"</span>;</pre></div></div>
             
         </li>
         
@@ -1286,16 +1286,22 @@ pr.persistString(<span class="hljs-string">"foo"</span>, <span class="hljs-strin
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
-              <p><strong>playDefaultTone()</strong></p>
-<p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
+              <p><strong>playDefaultTone()</strong>
+<strong>playDefaultTone(loops)</strong></p>
+<p><code>@param {boolean} loops (optional)</code> The tone loops indefinitely.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
 <p>Plays a default Android notification sound.</p>
-<p>Example</p>
+<p>Examples</p>
 <pre><code>pr.playDefaultTone();
+pr.playDefaultTone(<span class="hljs-literal">true</span>);
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>  PR.prototype.playDefaultTone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"playDefaultTone"</span>);
+            <div class="content"><div class='highlight'><pre>  PR.prototype.playDefaultTone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(loops)</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> loops !== <span class="hljs-string">"boolean"</span>) {
+      loops = <span class="hljs-literal">false</span>;
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"playDefaultTone"</span>, loops);
   };</pre></div></div>
             
         </li>
@@ -1589,6 +1595,27 @@ it is pressed.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
+              <p><strong>stopPlayback()</strong></p>
+<p><code>@returns {Ojbect}</code> A new PurpleRobot instance.</p>
+<p>Stops tone playback.</p>
+<p>Example</p>
+<pre><code>pr.stopPlayback();
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  PR.prototype.stopPlayback = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"stopPlayback"</span>);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
               <p><strong>updateConfig(options)</strong></p>
 <p><code>@param {Object} options</code> The options to configure.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
 <p>Example</p>
@@ -1616,11 +1643,11 @@ config_restrict_data_wifi
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p><strong>updateConfigUrl(url)</strong></p>
 <p><code>@param {String} url</code> The URL from which Purple Robot should fetch JSON
@@ -1637,11 +1664,11 @@ configurations.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p><strong>updateProbe(options)</strong></p>
 <p><code>@param {Object}</code> The probe settings.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1661,11 +1688,11 @@ configurations.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p><strong>updateTrigger(options)</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1734,11 +1761,11 @@ recurrence rule.</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p><strong>updateWidget(parameters)</strong></p>
 
@@ -1751,11 +1778,11 @@ recurrence rule.</p>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p><strong>version()</strong></p>
 <p><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1776,17 +1803,19 @@ recurrence rule.</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
-              <p><strong>vibrate(pattern)</strong></p>
-<p><code>@param {string} pattern</code> The name of the vibration pattern.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
+              <p><strong>vibrate(pattern)</strong>
+<strong>vibrate(pattern, repeats)</strong></p>
+<p><code>@param {string} pattern</code> The name of the vibration pattern.<br><code>@param {boolean} repeats (optional)</code> True if the pattern repeats.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
 <p>Vibrates the phone with a preset pattern.</p>
 <p>Example</p>
 <pre><code>pr.vibrate(<span class="hljs-string">"buzz"</span>);
+pr.vibrate(<span class="hljs-string">"buzz"</span>, <span class="hljs-literal">true</span>);
 </code></pre><p>Patterns</p>
 <pre><code>blip
 buzz
@@ -1794,20 +1823,24 @@ sos
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>  PR.prototype.vibrate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(pattern)</span> </span>{
+            <div class="content"><div class='highlight'><pre>  PR.prototype.vibrate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(pattern, repeats)</span> </span>{
     pattern = pattern || <span class="hljs-string">"buzz"</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"vibrate"</span>, q(pattern));
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> repeats !== <span class="hljs-string">"boolean"</span>) {
+      repeats = <span class="hljs-literal">false</span>;
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"vibrate"</span>, q(pattern) + <span class="hljs-string">", "</span> + repeats);
   };</pre></div></div>
             
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p><strong>widgets()</strong></p>
 
@@ -1820,11 +1853,11 @@ sos
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <h2 id="internal-methods">Internal methods</h2>
 
@@ -1833,11 +1866,11 @@ sos
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p><strong>_push(nextScript)</strong></p>
 <p><code>@private</code><br><code>@returns {Object}</code> A new PurpleRobot instance.</p>
@@ -1857,11 +1890,11 @@ sos
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p><strong>_stringify(value)</strong></p>
 <p><code>@private</code><br><code>@param {*} value</code> The value to be stringified.<br><code>@returns {string}</code> The stringified representation.</p>
@@ -1888,11 +1921,11 @@ stringified version is returned.</p>
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p><strong>q(value)</strong></p>
 <p><code>@private</code><br><code>@param {string} value</code> A string argument.<br><code>@returns {string}</code> A string with extra single quotes surrounding it.</p>
