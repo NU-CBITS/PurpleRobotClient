@@ -9,9 +9,16 @@
 //
 //     var playTone = pr.playDefaultTone();
 //     var toast = pr.emitToast("sorry");
-//     var dialog1 = pr.showNativeDialog(
-//       "dialog 1", "are you happy?", "Yes", "No", playTone, toast
-//     );
+//     var dialog1 = pr.showNativeDialog({
+//       title: "My Dialog",
+//       message: "What say you?",
+//       buttonLabelA: "cheers",
+//       scriptA: pr.emitToast("cheers!"),
+//       buttonLabelB: "boo",
+//       scriptB: pr.emitToast("boo!"),
+//       tag: "my-dialog",
+//       priority: 3
+//     });
 //     pr.scheduleScript("dialog 1", 10, "minutes", dialog1)
 //       .execute();
 //
@@ -67,7 +74,7 @@
   // `@public`
   //
   // The version of the API, corresponding to the version of Purple Robot.
-  PR.apiVersion = "1.5.18.3";
+  PR.apiVersion = "1.5.18.4";
 
   // __setEnvironment()__
   //
@@ -1088,12 +1095,14 @@
   //
   // Example
   //
-  // The following would emit a toast daily at the same time:
+  // The following would emit a toast every 30 minutes:
   //
   //     pr.updateTrigger({
   //       script: pr.emitToast("butter"),
   //       startAt: new Date(2014, 10, 24, 13, 54, 33, 0),
-  //       endAt: new Date(2014, 10, 24, 13, 54, 34, 0)"
+  //       endAt: new Date(2014, 10, 24, 13, 54, 34, 0),
+  //       repeatRule: "FREQ=MINUTELY;INTERVAL=30",
+  //       fire_on_boot: false
   //     });
   PR.prototype.updateTrigger = function(options) {
     options = options || {};
@@ -1139,7 +1148,8 @@
       datetime_start: formatDate(options.startAt),
       datetime_end: formatDate(options.endAt),
       datetime_repeat: options.repeatRule || "FREQ=DAILY;INTERVAL=1",
-      fire_on_boot: options.fire_on_boot || true
+      datetime_random: (options.random === true) || false,
+      fire_on_boot: (options.fire_on_boot === true) || true
     });
 
     return this._push("updateTrigger", q(triggerId) + ", " + triggerJson);

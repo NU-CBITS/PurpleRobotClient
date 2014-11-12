@@ -365,7 +365,7 @@ describe("PurpleRobot", function() {
         endAt: new Date(2014, 10, 24, 13, 54, 34, 0),
       }).toString();
 
-      expect(str).toEqual("PurpleRobot.updateTrigger('Z', {\"type\":\"datetime\",\"name\":\"Z\",\"identifier\":\"Z\",\"action\":\"PurpleRobot.emitToast('butter', true);\",\"datetime_start\":\"20141124T135433\",\"datetime_end\":\"20141124T135434\",\"datetime_repeat\":\"FREQ=DAILY;INTERVAL=1\",\"fire_on_boot\":true});");
+      expect(str).toEqual("PurpleRobot.updateTrigger('Z', {\"type\":\"datetime\",\"name\":\"Z\",\"identifier\":\"Z\",\"action\":\"PurpleRobot.emitToast('butter', true);\",\"datetime_start\":\"20141124T135433\",\"datetime_end\":\"20141124T135434\",\"datetime_repeat\":\"FREQ=DAILY;INTERVAL=1\",\"datetime_random\":false,\"fire_on_boot\":true});");
     });
 
     it("#version", function() {

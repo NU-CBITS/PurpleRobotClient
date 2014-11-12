@@ -34,9 +34,16 @@ pr.playDefaultTone().execute();
 </code></pre><p>Nesting (API calls within calls)</p>
 <pre><code><span class="hljs-keyword">var</span> playTone = pr.playDefaultTone();
 <span class="hljs-keyword">var</span> toast = pr.emitToast(<span class="hljs-string">"sorry"</span>);
-<span class="hljs-keyword">var</span> dialog1 = pr.showNativeDialog(
-  <span class="hljs-string">"dialog 1"</span>, <span class="hljs-string">"are you happy?"</span>, <span class="hljs-string">"Yes"</span>, <span class="hljs-string">"No"</span>, playTone, toast
-);
+<span class="hljs-keyword">var</span> dialog1 = pr.showNativeDialog({
+  title: <span class="hljs-string">"My Dialog"</span>,
+  message: <span class="hljs-string">"What say you?"</span>,
+  buttonLabelA: <span class="hljs-string">"cheers"</span>,
+  scriptA: pr.emitToast(<span class="hljs-string">"cheers!"</span>),
+  buttonLabelB: <span class="hljs-string">"boo"</span>,
+  scriptB: pr.emitToast(<span class="hljs-string">"boo!"</span>),
+  tag: <span class="hljs-string">"my-dialog"</span>,
+  priority: <span class="hljs-number">3</span>
+});
 pr.scheduleScript(<span class="hljs-string">"dialog 1"</span>, <span class="hljs-number">10</span>, <span class="hljs-string">"minutes"</span>, dialog1)
   .execute();
 </code></pre><p>Chaining (sequential API calls)</p>
@@ -160,7 +167,7 @@ pr.scheduleScript(<span class="hljs-string">"dialog 1"</span>, <span class="hljs
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.18.3"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.18.4"</span>;</pre></div></div>
             
         </li>
         
@@ -1699,11 +1706,13 @@ configurations.<br><code>@returns {Object}</code> A new PurpleRobot instance.</p
 <p>Adds or updates a Purple Robot trigger to be run at a time and with a
 recurrence rule.</p>
 <p>Example</p>
-<p>The following would emit a toast daily at the same time:</p>
+<p>The following would emit a toast every 30 minutes:</p>
 <pre><code>pr.updateTrigger({
-  script: pr.emitToast(&quot;butter&quot;),
-  startAt: new Date(2014, 10, 24, 13, 54, 33, 0),
-  endAt: new Date(2014, 10, 24, 13, 54, 34, 0)&quot;
+  script: pr.emitToast(<span class="hljs-string">"butter"</span>),
+  startAt: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2014</span>, <span class="hljs-number">10</span>, <span class="hljs-number">24</span>, <span class="hljs-number">13</span>, <span class="hljs-number">54</span>, <span class="hljs-number">33</span>, <span class="hljs-number">0</span>),
+  endAt: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2014</span>, <span class="hljs-number">10</span>, <span class="hljs-number">24</span>, <span class="hljs-number">13</span>, <span class="hljs-number">54</span>, <span class="hljs-number">34</span>, <span class="hljs-number">0</span>),
+  repeatRule: <span class="hljs-string">"FREQ=MINUTELY;INTERVAL=30"</span>,
+  fire_on_boot: <span class="hljs-literal">false</span>
 });
 </code></pre>
             </div>
@@ -1752,7 +1761,8 @@ recurrence rule.</p>
       datetime_start: formatDate(options.startAt),
       datetime_end: formatDate(options.endAt),
       datetime_repeat: options.repeatRule || <span class="hljs-string">"FREQ=DAILY;INTERVAL=1"</span>,
-      fire_on_boot: options.fire_on_boot || <span class="hljs-literal">true</span>
+      datetime_random: (options.random === <span class="hljs-literal">true</span>) || <span class="hljs-literal">false</span>,
+      fire_on_boot: (options.fire_on_boot === <span class="hljs-literal">true</span>) || <span class="hljs-literal">true</span>
     });
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"updateTrigger"</span>, q(triggerId) + <span class="hljs-string">", "</span> + triggerJson);
