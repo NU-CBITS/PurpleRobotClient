@@ -1552,13 +1552,16 @@ scripts to be run when each is pressed.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  PR.prototype.showNativeDialog = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> </span>{
-    <span class="hljs-keyword">var</span> tag = options.tag || <span class="hljs-literal">null</span>;
-    <span class="hljs-keyword">var</span> priority = options.priority || <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"showNativeDialog"</span>, [q(options.title),
+    <span class="hljs-keyword">var</span> args = [q(options.title),
       q(options.message), q(options.buttonLabelA),
       q(options.buttonLabelB), options.scriptA.toJson(),
-      options.scriptB.toJson(), <span class="hljs-built_in">JSON</span>.stringify(tag), priority].join(<span class="hljs-string">", "</span>));
+      options.scriptB.toJson()];
+
+    <span class="hljs-keyword">if</span> (options.tag !== <span class="hljs-literal">undefined</span> &amp;&amp; options.priority !== <span class="hljs-literal">undefined</span>) {
+      args = args.concat([<span class="hljs-built_in">JSON</span>.stringify(options.tag), options.priority]);
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"showNativeDialog"</span>, args.join(<span class="hljs-string">", "</span>));
   };</pre></div></div>
             
         </li>

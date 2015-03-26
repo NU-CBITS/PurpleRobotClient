@@ -983,13 +983,16 @@
   //       priority: 3
   //     });
   PR.prototype.showNativeDialog = function(options) {
-    var tag = options.tag || null;
-    var priority = options.priority || 0;
-
-    return this._push("showNativeDialog", [q(options.title),
+    var args = [q(options.title),
       q(options.message), q(options.buttonLabelA),
       q(options.buttonLabelB), options.scriptA.toJson(),
-      options.scriptB.toJson(), JSON.stringify(tag), priority].join(", "));
+      options.scriptB.toJson()];
+
+    if (options.tag !== undefined && options.priority !== undefined) {
+      args = args.concat([JSON.stringify(options.tag), options.priority]);
+    }
+
+    return this._push("showNativeDialog", args.join(", "));
   };
 
   // __showScriptNotification(options)__

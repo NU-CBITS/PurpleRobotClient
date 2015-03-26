@@ -20,7 +20,7 @@ describe("PurpleRobot", function() {
       buttonLabelB: "boo",
       scriptB: pr.emitToast("boo!")
     }).toString();
-    expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\", null, 0);");
+    expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\");");
   });
 
   describe(".setEnvironment", function() {
@@ -313,19 +313,34 @@ describe("PurpleRobot", function() {
         .toEqual("PurpleRobot.setUserId('Bobbie');");
     });
 
-    it("#showNativeDialog", function() {
-      var str = pr.showNativeDialog({
-        title: "My Dialog",
-        message: "What say you?",
-        buttonLabelA: "cheers",
-        scriptA: pr.emitToast("cheers!"),
-        buttonLabelB: "boo",
-        scriptB: pr.emitToast("boo!"),
-        tag: "my-dialog",
-        priority: 3
-      }).toString();
+    describe("#showNativeDialog", function() {
+      it("conforms to the API with tag and priority arguments", function() {
+        var str = pr.showNativeDialog({
+          title: "My Dialog",
+          message: "What say you?",
+          buttonLabelA: "cheers",
+          scriptA: pr.emitToast("cheers!"),
+          buttonLabelB: "boo",
+          scriptB: pr.emitToast("boo!"),
+          tag: "my-dialog",
+          priority: 3
+        }).toString();
 
-      expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\", \"my-dialog\", 3);");
+        expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\", \"my-dialog\", 3);");
+      });
+
+      it("conforms to the API without tag and priority arguments", function() {
+        var str = pr.showNativeDialog({
+          title: "My Dialog",
+          message: "What say you?",
+          buttonLabelA: "cheers",
+          scriptA: pr.emitToast("cheers!"),
+          buttonLabelB: "boo",
+          scriptB: pr.emitToast("boo!")
+        }).toString();
+
+        expect(str).toEqual("PurpleRobot.showNativeDialog('My Dialog', 'What say you?', 'cheers', 'boo', \"PurpleRobot.emitToast('cheers!', true);\", \"PurpleRobot.emitToast('boo!', true);\");");
+      });
     });
 
     it("#showScriptNotification", function() {
