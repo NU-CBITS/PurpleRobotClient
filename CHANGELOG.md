@@ -1,3 +1,6 @@
+## 1.5.18.5
+ * update `#showNativeDialog` to allow two signatures
+
 ## 1.5.18.4
 
 ### Updates
