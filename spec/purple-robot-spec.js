@@ -372,15 +372,31 @@ describe("PurpleRobot", function() {
       expect(str).toEqual("PurpleRobot.updateProbe({\"name\":\"probie\",\"enabled\":true});");
     });
 
-    it("#updateTrigger", function() {
-      var str = pr.updateTrigger({
-        script: pr.emitToast("butter"),
-        triggerId: "Z",
-        startAt: new Date(2014, 10, 24, 13, 54, 33, 0),
-        endAt: new Date(2014, 10, 24, 13, 54, 34, 0),
-      }).toString();
+    describe("#updateTrigger", function() {
+      it("adds defaults", function() {
+        var str = pr.updateTrigger({
+          triggerId: "asdf",
+          script: pr.emitToast("butter"),
+          startAt: new Date(2014, 10, 24, 13, 54, 33, 0),
+          endAt: new Date(2014, 10, 24, 13, 54, 34, 0)
+        }).toString();
 
-      expect(str).toEqual("PurpleRobot.updateTrigger('Z', {\"type\":\"datetime\",\"name\":\"Z\",\"identifier\":\"Z\",\"action\":\"PurpleRobot.emitToast('butter', true);\",\"datetime_start\":\"20141124T135433\",\"datetime_end\":\"20141124T135434\",\"datetime_repeat\":\"FREQ=DAILY;INTERVAL=1\",\"datetime_random\":false,\"fire_on_boot\":true});");
+        expect(str)
+          .toEqual("PurpleRobot.updateTrigger('asdf', {\"type\":\"datetime\",\"name\":\"asdf\",\"identifier\":\"asdf\",\"action\":\"PurpleRobot.emitToast('butter', true);\",\"datetime_start\":\"20141124T135433\",\"datetime_end\":\"20141124T135434\",\"datetime_repeat\":\"FREQ=DAILY;INTERVAL=1\",\"datetime_random\":false,\"fire_on_boot\":true});");
+      });
+
+      it("allows custom settings", function() {
+        var str = pr.updateTrigger({
+          script: pr.emitToast("butter"),
+          triggerId: "Z",
+          startAt: new Date(2014, 10, 24, 13, 54, 33, 0),
+          endAt: new Date(2014, 10, 24, 13, 54, 34, 0),
+          random: true,
+          fire_on_boot: false
+        }).toString();
+
+        expect(str).toEqual("PurpleRobot.updateTrigger('Z', {\"type\":\"datetime\",\"name\":\"Z\",\"identifier\":\"Z\",\"action\":\"PurpleRobot.emitToast('butter', true);\",\"datetime_start\":\"20141124T135433\",\"datetime_end\":\"20141124T135434\",\"datetime_repeat\":\"FREQ=DAILY;INTERVAL=1\",\"datetime_random\":true,\"fire_on_boot\":false});");
+      });
     });
 
     it("#version", function() {

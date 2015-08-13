@@ -1,57 +1,49 @@
+# Changelog
+
+## 1.6.8.0 - 2015-08-13
+
+* fix bug preventing `#updateTrigger` from setting `fire_on_boot` to false
+
 ## 1.5.18.5
- * update `#showNativeDialog` to allow two signatures
+
+* update `#showNativeDialog` to allow two signatures
 
 ## 1.5.18.4
 
-### Updates
-  * added `random` option to `updateTrigger`
+* added `random` option to `updateTrigger`
 
 ## 1.5.18.3
 
-### Updates
-  * updated `playDefaultTone` and `vibrate`
-
-### Features
-  * implemented `stopPlayback`
+* updated `playDefaultTone` and `vibrate`
+* implemented `stopPlayback`
 
 ## 1.5.18.2
 
-### Features
-  * implemented `getUploadUrl`, `setUploadUrl`
+* implemented `getUploadUrl`, `setUploadUrl`
 
 ## 1.5.18.1
 
-### Features
-  * implemented `updateConfigUrl`
+* implemented `updateConfigUrl`
 
 ## 1.5.18.0
 
-### Updates
-  * simplified development tasks with grunt
-  * updated README accordingly
-
-### Features
-  * implemented `updateProbe`
+* simplified development tasks with grunt
+* updated README accordingly
+* implemented `updateProbe`
 
 ## 1.5.16.2
 
-### Features
-  * implemented `disableEachProbe`
+* implemented `disableEachProbe`
 
 ## 1.5.16.1
 
-### Updates
-  * added `fire_on_boot` option to `updateTrigger`
+* added `fire_on_boot` option to `updateTrigger`
 
 ## 1.5.16.0
 
-### Updates
-  * minor documentation improvements
-
-### Features
-  * implemented `disableProbes`, `enableProbes`, `fetchWidget`, `loadLibrary`
+* minor documentation improvements
+* implemented `disableProbes`, `enableProbes`, `fetchWidget`, `loadLibrary`
 
 ## 1.5.15.0
 
-### Updates
-  * reorganized documentation for ease of use
+* reorganized documentation for ease of use

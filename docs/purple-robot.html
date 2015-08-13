@@ -167,7 +167,7 @@ pr.scheduleScript(<span class="hljs-string">"dialog 1"</span>, <span class="hljs
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.5.18.5"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  PR.apiVersion = <span class="hljs-string">"1.6.8.0"</span>;</pre></div></div>
             
         </li>
         
@@ -1765,7 +1765,7 @@ recurrence rule.</p>
       datetime_end: formatDate(options.endAt),
       datetime_repeat: options.repeatRule || <span class="hljs-string">"FREQ=DAILY;INTERVAL=1"</span>,
       datetime_random: (options.random === <span class="hljs-literal">true</span>) || <span class="hljs-literal">false</span>,
-      fire_on_boot: (options.fire_on_boot === <span class="hljs-literal">true</span>) || <span class="hljs-literal">true</span>
+      fire_on_boot: <span class="hljs-literal">true</span> &amp;&amp; (options.fire_on_boot !== <span class="hljs-literal">false</span>)
     });
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._push(<span class="hljs-string">"updateTrigger"</span>, q(triggerId) + <span class="hljs-string">", "</span> + triggerJson);

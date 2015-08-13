@@ -74,7 +74,7 @@
   // `@public`
   //
   // The version of the API, corresponding to the version of Purple Robot.
-  PR.apiVersion = "1.5.18.5";
+  PR.apiVersion = "1.6.8.0";
 
   // __setEnvironment()__
   //
@@ -1152,7 +1152,7 @@
       datetime_end: formatDate(options.endAt),
       datetime_repeat: options.repeatRule || "FREQ=DAILY;INTERVAL=1",
       datetime_random: (options.random === true) || false,
-      fire_on_boot: (options.fire_on_boot === true) || true
+      fire_on_boot: true && (options.fire_on_boot !== false)
     });
 
     return this._push("updateTrigger", q(triggerId) + ", " + triggerJson);
